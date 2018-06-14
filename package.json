@@ -1,0 +1,21 @@
+{
+  "name": "imt",
+  "version": "0.0.1",
+  "description": "the i markup language",
+  "main": "index.js",
+  "author": "atlas jobinson",
+  "license": "MIT",
+  "bin": {
+    "imt": "bin/il.js"
+  },
+    "keywords": [
+	"markup",
+	"i-mark-text"
+    ],
+  "scripts": {
+      "test": ""
+  },
+  "devDependencies": {
+    "uglify-js": "^3.3.28"
+  }
+}
