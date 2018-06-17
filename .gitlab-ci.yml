@@ -4,9 +4,10 @@ pages:
   stage: deploy
   script:
   - echo 'begin deploy ...'
+  - cp docs public
   artifacts:
     paths:
-    - docs
+    - public
   only:
   - master
 

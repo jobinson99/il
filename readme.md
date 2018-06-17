@@ -55,7 +55,7 @@
 ## 待办任务
 
 - [ ] 实现 nodejs 编译器
-- [x] 把markdown-mode改造下，转化为 il-mode
+- [x] 为emacs编写一个 il-mode
 - [ ] 编写 snippet
 - [ ] 编写 kwrite 规则 [kde syntax highlighting framework](https://github.com/KDE/syntax-highlighting)
 - [ ] 制造一个编辑器，使其能把各种媒体内容放入，保存时归档，打开是解开归档。从而形成一个编辑器。

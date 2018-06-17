@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: head-info
+# contributor: 黑传说
+# --
+``` meta
+layout: post
+title: "`(mis-remove-date (mis-extract-file-name (buffer-name)))`"
+date: `(format-time-string "%Y-%m-%d %H:%M:%S %z")`
+categories: `(buffer-file-name)`
+tags: [${1:话题}]
+lastmod: 
+``` 
+
+$0
