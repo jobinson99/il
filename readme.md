@@ -42,9 +42,7 @@
 
 效果 见 截图，实测效果可参见 test文件夹
 
-![标志](/docs/images/设计准则1.png)
-
-![标志](/docs/images/设计准则2.png)
+![标志](/docs/images/screen1.png)
 
 
 
