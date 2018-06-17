@@ -1,4 +1,4 @@
-;;; il-mode.el --- Major mode for Il-formated-text -*- lexical-binding: t; -*-
+;;; il-mode.el --- Major mode for Il-formated-text
 
 ;; Copyright (C) 2018 Atlas Jobinson and il-mode contributors(see the
 ;; commit log for details).
@@ -41,6 +41,7 @@
 
 (require 'easymenu)
 (require 'cl-lib)
+(require 'outline)
 
 ;;; User Customizable Viriables ========================================
 
@@ -48,7 +49,7 @@
 (defgroup il nil
   "Major mode for editing Il text files."
   :prefix "il-"
-  :group 'languages
+  :group 'wp
   :link '(url-link "https://il.bian.ga"))
 
 (defcustom il-mode-hook nil
@@ -93,7 +94,6 @@ arguments."
   :type '(choice file function (const: tag "None" nil)))
 
 
-
 ;;; Constants =====================================================
 (defconst il-mode-version "20180614-alpha"
   "Version of `il-mode'.")
@@ -111,36 +111,75 @@ arguments."
 
 ;;; Regular Expressions ===========================================
 
-(defun il-re-concat (l)
-  "Concatenate the elements of a list with a \\| separator and non-matching parentheses"
-  (concat
-   ""
-   (mapconcat 'identity l "\\|")
-   ""))
 
 (defvar il-blocks
-  '("^#1" "^#2" ))
+  '("^#1" "^#2" "^#3" "^#4" "^#5" "^#6" "^#1\\+" "^#2\\+" "^#3\\+" "^#4\\+" "^#5\\+" "^#6\\+" "^```" "^\-" "^\+" "^\>")
+  "区块标识清单，此非必要")
 (defvar il-inline-markup
-  '(""))
+  '("")
+  "行内标识清单，此非必要")
 
-
-(defun il-block-matcher (bloc)
-  "Return the matcher regexp for a block element"
+(defun il-re-concat (lists)
+  "Concatenate the elements of a list with a \\| separator and non-matching parentheses."
   (concat
-   "^"
-   bloc
-   ""
+   "\\(?:"
+   (mapconcat 'identity lists "\\|")
+   "\\)"))
+
+(defun il-block-matcher (markup)
+  "Return the matcher regexp for a block element."
+  (concat
+   "^\\(\\("
+   markup
+   "[[:blank:]]+\\).*[\n\r][\\^]*?\\)"
    ))
 
-(defun il-list-matcher (bullet)
-  "Return the matcher regexp for a list bullet"
+(defun il-block-multiline-matcher (markup)
+  "Return the matcher regexp for a list or blockquote with start and end."
   (concat
-   ""
-   bullet
-   ""))
+   "\\(\\(^["
+   markup
+   "]+\\)\\["
+   "\\([[:blank:]]+\\)\\(.\\|\n\\)*?"
+   "\\(\\2\\]\\)\n?\\)"
+   "\\|\\(^\\(\\(["
+   markup
+   "]+[[:blank:]]+\\).*[\n\r][\\^]*?\\)\\)"))
+
+(defun il-block-custom-matcher (markup &optional lang keyword)
+  "Return the matcher regexp for a custom pre block.
+参考markdownmode：^\\(```\\)\\([[:blank:]]*{?[[:blank:]]*\\)\\([^[:space:]]+?\\)?\\(?:[[:blank:]]+\\(.+?\\)\\)?\\([[:blank:]]*}?[[:blank:]]*\\)$
+^\\(```\\)\\(\\s *?\\)$
+"
+  (concat
+   "\\(^"
+   markup
+   "\\{3\\}\\)"
+   "\\(\\s \\)"
+   lang
+   keyword
+   "\\(.\\|\n\\)*?"
+   "\\1\n?"))
+
+(defun il-block-hr-matcher (markup)
+  "Return the matcher regexp for a hr block."
+  (concat
+   "\\(^"
+   markup
+   "\\{3\\}[[:blank:]]*\\(?:\n\\|$\\)\\)"
+   ))
 
 (defun il-inline-matcher (markup)
-  "Return the matcher regexp for an inline markup"
+  "Return the matcher regexp for an inline markup."
+  (concat
+   "\\W\\("
+   markup
+   "\\(?:\\w\\|\\w.*?\\w\\|[[{(].*?\\w\\)"
+   markup
+   "\\)\\W"))
+
+(defun il-inline-custom-matcher (markup)
+  "Return the matcher regexp for a custom mark."
   (concat
    ""
    markup
@@ -151,17 +190,15 @@ arguments."
 (defvar il-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "M-RET" 'il-insert-head)
-    
     map)
-    "Keymap used in `il-mode' buffers."
+  "Keymap used in `il-mode' buffers."
   )
 
-(defvar il-mode-syntax-table
-  (let ((syntax-table (make-syntax-table)))
-    (modify-syntax-entry ?\ "" syntax-table)
-    
-    syntax-table)
-  "Syntax table used in `il-mode' buffers.")
+;; (defvar il-mode-syntax-table
+;;   (let ((syntax-table (make-syntax-table)))
+;;     (modify-syntax-entry ?\ "" syntax-table)
+;;     syntax-table)
+;;   "Syntax table used in `il-mode' buffers.")
 
 
 
@@ -170,24 +207,37 @@ arguments."
 (defvar il-font-lock-keywords
   (list
    ;; headers
-   `(,(il-block-matcher "#1") 1 'il-h1-face t t)
-   `(,(il-block-matcher "#2") 1 'il-h2-face t t)
-   `(,(il-block-matcher "#3") 1 'il-h3-face t t)
-   `(,(il-block-matcher "#4") 1 'il-h4-face t t)
-   `(,(il-block-matcher "#5") 1 'il-h5-face t t)
-   `(,(il-block-matcher "#6") 1 'il-h6-face t t)
+   `(,(il-block-matcher "#1\\+?") 1 'il-h1-face t t)
+   `(,(il-block-matcher "#2\\+?") 1 'il-h2-face t t)
+   `(,(il-block-matcher "#3\\+?") 1 'il-h3-face t t)
+   `(,(il-block-matcher "#4\\+?") 1 'il-h4-face t t)
+   `(,(il-block-matcher "#5\\+?") 1 'il-h5-face t t)
+   `(,(il-block-matcher "#6\\+?") 1 'il-h6-face t t)
+   ;; hr
+   `(,(il-block-hr-matcher "=") 1 'il-hr-face t t)
    ;; blockquotes
-   ;; pre
+   `(,(il-block-multiline-matcher ">") 1 'il-blockquote-face t t)
    ;; list
+   `(,(il-block-multiline-matcher "+-") 1 'il-list-face t t)
+   ;; pre needs to fixed
+   ;; custom block il-pre-language-face il-pre-keywords-face needs to fixed
+   `(,(il-block-custom-matcher "`") 0 'il-pre-face t t)
+   ;; links il-inline-custom-matcher needs to fixed
    ;; inline
-   
+   `(,(il-inline-matcher "\\*") 1 'il-bold-face prepend t)
+   `(,(il-inline-matcher "/") 1 'il-italic-face prepend t)
+   `(,(il-inline-matcher "\\+") 1 'il-deleted-face prepend t)
+   `(,(il-inline-matcher "_") 1 'il-underline-face prepend t)
+   ;; needs to fixed
+   `(,(il-inline-matcher "\\^") 1 'il-superscript-face prepend t)
+   `(,(il-inline-matcher "~") 1 'il-subscript-face prepend t)
+   `(,(il-inline-matcher "`") 0 'il-code-face prepend t)
    )
-  "Keyword/Regexp for fontlocking of il-mode")
+  "Keyword/Regexp for fontlocking of `il-mode'.")
 
 (defgroup il-faces nil
   "Faces use in il mode for syntax highlighting."
-  :group 'il
-  :face 'faces)
+  :group 'faces)
 
 (defface il-h1-face
   '((t (:height 2.0 :weight bold)))
@@ -220,17 +270,22 @@ arguments."
   :group 'il-faces)
 
 (defface il-blockquote-face
-  '((t (:foreground "cyan")))
+  '((t (:background "cyan")))
   "Face used to highlight blockquotes."
   :group 'il-faces)
 
 (defface il-list-face
-  '((t (:foreground "ivory1")))
+  '((t (:background "ivory3")))
   "Face used for list item"
   :group 'il-faces)
 
+(defface il-hr-face
+  '((t (:background "ivory4")))
+  "Face used for <hr> blocks"
+  :group 'il-faces)
+
 (defface il-pre-face
-  '((t (:foreground "ivory2")))
+  '((t (:background "ivory2")))
   "Face used for <pre> blocks"
   :group 'il-faces)
 
@@ -239,7 +294,7 @@ arguments."
   "Face used for <pre> language names."
   :group 'il-faces)
 
-(defface il-pre-keyword-face
+(defface il-pre-keywords-face
   '((t (:foreground "brown")))
   "Face used for <pre> keywords."
   :group 'il-faces)
@@ -265,27 +320,29 @@ arguments."
   :group 'il-mode)
 
 (defface il-superscript-face
-  '((t (:height 1.1)))
+  '((t (:height 0.8 :raise 0.3)))
   "Face used for superscript words."
   :group 'il-faces)
 
 (defface il-subscript-face
-  '((t (:height 0.8)))
+  '((t (:height 0.8 :raise -0.3)))
   "Face used for subscript words."
   :group 'il-faces)
 
 (defface il-code-face
-  '((t (:foreground "cyan")))
+  '((t (:background "cyan")))
   "Face used to highlight inline code."
   :group 'il-faces)
-
 
 (defface il-link-face
   '((t (:foreground "pink")))
   "Face used to highlight links."
   :group 'il-mode)
 
-
+(defface il-inline-custom-face
+  '((t (:foreground "gold")))
+  "Face used for customized style inline words."
+  :group 'il-faces)
 
 
 ;;; Il Parsing Functions ==========================================
@@ -293,12 +350,69 @@ arguments."
 
 ;;; Element Insertion =============================================
 
+(defun il-export () "")
+(defun il-insert-title () "")
+(defun il-insert-ordered-title () "")
+(defun il-insert-bold () "")
+(defun il-insert-italic () "")
+(defun il-insert-underline () "")
+(defun il-insert-strike-through () "")
+(defun il-insert-supperscript () "")
+(defun il-insert-subscript () "")
+(defun il-insert-code () "")
+(defun il-insert-custom-mark () "")
+(defun il-insert-image () "")
+(defun il-insert-url () "")
+(defun il-insert-navigation () "")
+(defun il-insert-footnote () "")
+(defun il-insert-list () "")
+(defun il-insert-ordered-list () "")
+(defun il-insert-multiline-list () "")
+(defun il-insert-hr () "")
+(defun il-insert-blockquote () "")
+(defun il-insert-multiline-blockquote () "")
+(defun il-insert-pre () "")
+(defun il-insert-table () "")
+(defun il-insert-meta () "")
+(defun il-insert-comment () "")
+(defun il-insert-custom-block ()
+  "插入自定义的区块，可添加 类别或名称"
+  (interactive)
+  )
+(defun il-insert-pre-edit ()
+  "利用emacs本身的代码编辑器功能，编辑代码，可缩进，可自动提示等。"
+  (interactive))
+
+;;; Show or hide or init or highlight the block
+(defun il-toggle-preview () "")
+(defun il-toggle-buffer-tree ()
+  ""
+  )
+(defun il-toggle-image () "")
+(defun il-toggle-init-table () "")
+(defun il-toggle-init-math () "")
+(defun il-toggle-init-svg () "")
+(defun il-toggle-pre-highlight () "")
+
+;;; Mode meta infomation
+
+(defun il-mode-show-version ()
+  "Display the version number in the minibuffer."
+  (interactive)
+  (message "il-mode version %s" il-mode-version)
+  il-mode-version)
+
+(defun il-mode-info ()
+  "Open the `il-mode' homepage."
+  (interactive)
+  (eww-browse-url "https://il.bian.ga"))
 
 
-
-(defconst il-extension-recognized-laguages
-  "language list for the extension"
-  '("table" "meta" "header" "1C-Enterprise" "ABAP" "ABNF" "AGS-Script" "AMPL" "ANTLR"
+;; 用于扩展，用于自动完成
+(defconst il-extension-languages
+  ;; "language list for the extension"
+  '("table" "meta" "header" "comment" "custom"
+    "1C-Enterprise" "ABAP" "ABNF" "AGS-Script" "AMPL" "ANTLR"
     "API-Blueprint" "APL" "ASN.1" "ASP" "ATS" "ActionScript" "Ada" "Agda"
     "Alloy" "Alpine-Abuild" "Ant-Build-System" "ApacheConf" "Apex"
     "Apollo-Guidance-Computer" "AppleScript" "Arc" "Arduino" "AsciiDoc"
@@ -369,7 +483,8 @@ arguments."
     "mupad" "nesC" "ooc" "reStructuredText" "wisp" "xBase")
   "Language specifiers recognized for extension syntax highlighting features.")
 
-
+(defun il-get-codelist ()
+  "Get the supported extension list")
 
 ;;; Keymap ========================================================
 
@@ -380,23 +495,73 @@ arguments."
   "Menu for Il mode"
   '("〖友码〗"
     "---"
-    ("文件操作")
+    ("文件操作"
+     ["导出" il-export]
+     )
     "---"
-    ("设定标题级别")
+    ("设定标题级别"
+     ["不编号标题" il-insert-title]
+     ["编号标题" il-insert-ordered-title]
+     )
     "---"
-    ("段内样式")
+    ("段内样式"
+     ["加粗" il-insert-bold]
+     ["斜体" il-insert-italic]
+     ["下划线" il-insert-underline]
+     ["删除线" il-insert-strike-through]
+     ["上标" il-insert-supperscript]
+     ["下标" il-insert-subscript]
+     ["行内代码" il-insert-code]
+     "---"
+     ["自定义" il-insert-custom-mark])
     "---"
-    ("列表项")
+    ("链接"
+     ["图片" il-insert-image]
+     ["网络链接" il-insert-url]
+     ["页内链接" il-insert-navigation]
+     ["脚注" il-insert-footnote])
     "---"
-    ("链接")
+    ("列表项"
+     ["插入 无序列表" il-insert-list]
+     ["插入 有序列表" il-insert-ordered-list]
+     ["插入多行列表" il-insert-multiline-list])
     "---"
     ["插入横线" il-insert-hr]
-    ("扩充块"
+    ("插件化区块"
      ["插入引言" il-insert-blockquote]
-     ["插入代码块" il-insert-code]
-     ["插入表格" il-insert-table])
+     ["插入多行引言" il-insert-multiline-blockquote]
+     ["插入代码块" il-insert-pre]
+     ["插入表格" il-insert-table]
+     ["插入元信息" il-insert-meta]
+     ["插入注释" il-insert-comment]
+     "---"
+     ["插入自定区块" il-insert-custom-block]
+     ["代码编辑" il-insert-pre-edit
+      :enable (il-insert-pre-edit)])
     "---"
-    ("显/隐文本结构")
+    ("显/隐文本结构"
+     ["显/隐全部" il-toggle-buffer-tree
+      :enable (il-toggle-buffer-tree)]
+     ["实时预览" il-toggle-preview
+      :style radio
+      :selected il-toggle-preview]
+     "---"
+     ["显/隐 图像" il-toggle-image
+      :style radio
+      :selected il-toggle-image]
+     ["显/隐 表格" il-toggle-init-table
+      :style radio
+      :selected il-toggle-init-table]
+     ["显/隐 数学公式" il-toggle-init-math
+      :style radio
+      :selected il-toggle-init-math]
+     ["显/隐 脚本图" il-toggle-init-svg
+      :style radio
+      :selected il-toggle-init-svg]
+     ["显/隐 代码高亮" il-toggle-pre-highlight
+      :style radio
+      :selected il-toggle-pre-highlight]
+     )
     "---"
     ("文档"
      ["查看文档" il-mode-info]
@@ -406,30 +571,21 @@ arguments."
 
 ;;; imenu ==========================================================
 (defvar il-imenu-generic-expression
-  `(("Headings" "^#[[:digit:]]\s" 1))
+  `(("Headings" "^\\(\\(#[1-6]\\+?[[:blank:]]+\\).*[\n\r][\\^]*?\\)" 1))
   "Expression to generate imenu entries.")
 
 
 ;;; Extension Framework ============================================
 
 
-;;; Mode Definition ================================================
 
-(defun il-mode-version ()
-  "Display the version number in the minibuffer."
-  (interactive)
-  (message "il-mode version %s" il-mode-version)
-  il-mode-version)
-
-(defun il-mode-info ()
-  "Open the il-mode homepage."
-  (interactive)
-  (browse-url "https://il.bian.ga"))
+;;; Mode definition ================================================
 
 ;;;###autoload
 (define-derived-mode il-mode text-mode "Il"
   "A Major mode for editing Il files."
-  (set (make-local-variable 'font-lock-defaults) '(textile-font-lock-keywords t))
+  ;; Font lock
+  (set (make-local-variable 'font-lock-defaults) '(il-font-lock-keywords t))
   (set (make-local-variable 'font-lock-multiline) 'undecided)
   (set (make-local-variable 'imenu-generic-expression) il-imenu-generic-expression)
   
@@ -437,21 +593,24 @@ arguments."
   ;; Outline mode
   ;; Flyspell
   ;; Electric quoting
-  ;; add live preview export hook)
+  ;; Menu
+  (easy-menu-add il-mode-menu il-mode-map)
+  ;; Extensions
+  
+  ;; add live preview export hook
+  )
 
 ;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.il\\" . il-mode) t)
+(add-to-list 'auto-mode-alist '("\\.il\\'" . il-mode) t)
 ;; auto activate the il-mode while find-file *.il
+;; (add-to-list 'auto-mode-alist (cons "\\.il\\'" 'il-mode))
 
 
 ;;; Viewing Modes
-
-;;;###autoload
-
-
 ;;; Live Preview Mode ==============================================
 ;;;###autload
-
+(define-minor-mode il-live-preview-mode
+  "Toggle native previewing on save for a specific il file")
 
 ;;; 注：不用外挂编译器
 
@@ -461,4 +620,4 @@ arguments."
 ;; indent-tabs-mode: nil
 ;; coding: utf-8
 ;; End:
-;; il-mode.el ends here
+;;; il-mode.el ends here
