@@ -37,7 +37,7 @@ _xxx_         / \_\w+\_ /g
 ~xxx~         /\~\w+\~/g
 	      /(?<!\\|\s)\^(\S+?)\^(?<!\\\^)/g     前后不能有空格，且消除了 第一个代号转义问题。中间不能有空格
 	      /(?<!\\)\^(\S+?)\^(?<!\\\^)/g    前后可有空格
-	      emacs版：
+	      emacs版：\\^\\w+\\^ 仍有诸多bug
 	     
 代码
 `xxx`         / \`\w+\` /g
@@ -61,37 +61,41 @@ _xxx_         / \_\w+\_ /g
 
 #3 测试数据：行内
 
-```
 
+ *bold要选到x* 
+ *bold blod要选到bold* 
+ * blod不选到f *
+ *bold要选到bold**** 
+da*nobold不选到nobold* 
+*nobold*noblod不选到nobold
 
- *xx要选到x* 
- *fsdf f要选到asdf* 
- * fysd不选到f *
- *fs要选到dfa**** 
-da*fd不选到sf* 
-*fsa*fsd不选到f
+ /italic italic要选到italic/
+/noitalic不选到noitalic/
 
- /dfs d要选到f/
-/sd不选到fd/
+ +strike through 要选到strike through+ 
+begin +strikethrough要选到strikethrough+ end
++nostrikethrough不选到nostrikethrough+ no strike through
+ + nostrikethrough不选到nostrikethrough +
+ +strikethrough要选到strikethrough+++++
 
- +ad 要选到s+ 
-asdf +sfs要选到df+ fdf
-+fsad不选到fsd+ fadsf
- + d不选到fas +
- +sfs要选到df+++++
-3 + 5 = 8 4 - 2 = 2
+3 + 5 = 8 4 - 2 = 2  no inline style
 
-as^f要选到s^dfs
-fds\^f不选到sd^a要选到fs^fd
-afd^s要选到f\^s要选到d^fsdfsd
-^不选到^ afasf
-Roll ov^e^r matches or the ex\^p不选到res^sgj要选到gjh^ion f^ ^ ^^or details.Chea^要选到h^t不选到sh^h要选到^ eet, full Ref^er要选到e\^n要选到^ce, results ^wi不选到th^ the Tools below. Replace & List ou^67要选到tp^ut
+word^superscript上标要选到superscript^word
+word\^nosuperscript不选到nosuperscript^superscript要选到superscript^word
+word^superscript要选到superscript\^nosuperscript要选到superscript^word
+^nosuperscript不选到^ word
+Roll ov^e^r matches or the ex\^p不选到res^sgj要选到gjh^ion f^ ^ ^^or details.Chea^superscript要选到h^t不选到sh^h要选到^ eet, full Ref^er要选到e\^n要选到^ce, results ^wi不选到th^ the Tools below. Replace & List ou^67要选到tp^ut
 
-```
+word ~subscript下标~ word word ~下标superscript~ word word~supscriptaf~ 
+
+word 'code要选到' word 'code code要选到code' word
+
+word word word `\`nocodestart要选到code code` word ` nocode ` word word word 
+
 
 #3 连接
 
-```
+
 
 [xxx](yyy)      / \[\w+\]\(.+\) /g
 [xxx| yyy]      / \[\w+\| .+\]/g
@@ -102,7 +106,6 @@ Roll ov^e^r matches or the ex\^p不选到res^sgj要选到gjh^ion f^ ^ ^^or detai
 [[#anchor][anchorname]]
 [[:anchor][anchor content]]
 
-```
 
 
 
@@ -136,16 +139,17 @@ Roll ov^e^r matches or the ex\^p不选到res^sgj要选到gjh^ion f^ ^ ^^or detai
 捕获 行首 且 行末可空格 且 需换行
 
  >[ >]     /(^\>\[ )(.|\n)*(-\>\])/
-          emacs版：\\(\\(^[>]+\\)\\[\\([[:blank:]]+\\)\\(.\\|\n\\)*?\\(\\2\\]\\)\n?\\)\\|\\(^\\(\\([>]+[[:blank:]]+\\).*[\n\r][\\^]*?\\)\\)
+          emacs版：\\(\\(^\\([>]+\\)\\[\\([[:blank:]]+\\)\\(.\\|\n\\)*?\\(^\\3\\]\n?\\)\\)\\|\\(^\\([>]+[[:blank:]]+\\).*[\n\r][\\^]*?\\)\\)
 
 列表
  - -- + -[ -]     /^([\-|\+]+(\[|\])?)\s+([^\n]+?)\s*(?:\n+|$)/
 
  -[ -]     /(^\-\[ )(.|\n)*(-\-\])/
-           emacs版：^\\(\\([-+]+[[:blank:]]+\\).*[\n\r][\\^]*?\\)
-           \\(^[+-]+\\)\\[\\([[:blank:]]+\\)\\(.\\|\n\\)*?\\(\\1\\]\n?\\)
+           emacs版：单行 \\(^\\([+-]+[[:blank:]]+\\).*[\n\r][\\^]*?\\)
+           多行 \\(^[+-]+\\)\\[\\([[:blank:]]+\\)\\(.\\|\n\\)*?\\(\\1\\]\n?\\)
 
-           \\(\\(^[+-]+\\)\\[\\([[:blank:]]+\\)\\(.\\|\n\\)*?\\(\\2\\]\\)\n?\\)\\|\\(^\\(\\([-+]+[[:blank:]]+\\).*[\n\r][\\^]*?\\)\\)
+	   \\(\\(^\\([+-]+\\)\\[\\([[:blank:]]+\\)\\(.\\|\n\\)*?\\(^\\3\\]\n?\\)\\)\\|\\(^\\([+-]+[[:blank:]]+\\).*[\n\r][\\^]*?\\)\\)
+	   颠倒过来，效果一样
 
 程序块  \1 表示引用第一个 匹配组 ```
 \``` ``` shell   /^(`{3})([\s\S]*?)\n?\s*\1\s*(?:\n+|$)/
@@ -154,6 +158,7 @@ Roll ov^e^r matches or the ex\^p不选到res^sgj要选到gjh^ion f^ ^ ^^or detai
 		/^(`{3}.*[\n\r][^]*?^`{3})/gm   这也完美
                 emacs版：\\(^```\\)\\(\\s \\)\\(.\\|\n\\)*?\\(^```\\)\\n?
 注意：所有的选择在程序块里，都应失效。
+可参考 markdown mode里的 gfm部分。
 
 自定义区块
 \``` custom xxx yyy
@@ -175,67 +180,68 @@ Roll ov^e^r matches or the ex\^p不选到res^sgj要选到gjh^ion f^ ^ ^^or detai
 
 
 
-##1+ afdfsfa不可选到
+##1+ no title 不可选到
 
 
-#1+ sfadsf需要选到
+#1+ title1 需要选到
 
-##   ffds
+##   no title
 
 ## 
 
 #1 
-#11 不要选到
+#11 no title 不要选到
 
-#2:: fad不要选到
+#2:: no title 不要选到
 
-#22: fasdf不要选到
+#22: no title 不要选到
 
-#1: 22不要选到
+#1: no title 不要选到
 
-# 22 dfasdf不要选到
+# 22 no title 不要选到
 
 
-#22 发生地法不要选到
+#22 no title 不要选到
 
 # 1
 
-## sdfasd不要选到
+## no title 不要选到
 
-##3: asfsdf不要选到
+##3: no title 不要选到
 
-# fasdf要选到
-### fasdfa不要选到
+# no title 不要选到
+### no title 不要选到
 
 
-#+ adsffd不要选到
+#+ no title 不要选到
 
-#2 dfdf要选到
+#2 title2 要选到
 
-#3: afasdf不要选到
+#3: no title不要选到
 
 #2 #3 #2
 
-#4 afsdfaf要选到
+#4 title4 要选到
 
-#111 dasfsdd不要选到 
+#111 too many rank, no title 不要选到 
 
-#2  fasdf asfdf要选到
+#2  title2 要选到
 
-#2 fasfd要选到 #2
+#2 title2要选到 #2
 
-#afsdf不要选到 
+#no title不要选到 
 
 ###
 
- #1 3fdaf不要选到
+ #1 no title 不要选到
 
 [解决]断行会使其失效
-#1 fasf要选到 
+#1 title1 要选到 
 
-·[解决]第一行无空格，连续断行会被选取问题。
+[解决]第一行无空格，连续断行会被选取问题。
+
 #1
-fgfhgf不要 选到
+no title 不要 选到
 
 
 #3 测试用的样例：分隔线
@@ -246,7 +252,7 @@ fgfhgf不要 选到
 
 ===   
 
-===   fdsfds需要失效
+===   no hr 需要失效
 
 ===
 
@@ -257,107 +263,113 @@ fgfhgf不要 选到
 
 #3 测试用的样例：引用
 
-> a
->  f
->> ad
+> blockquote
+>  blockquote started with multi blank
+>> sub blockquote
 
->>> fsdf
+>>> rank 3 blockquote
 
->[ fadf
+>[ multiline blockquote start
 
->[ d必需对应
+>[ multiline blockquote 必需对应
 必需选到
->] f必需对应
+>] multiline blockquote end 必需对应
 
- > dsf不可选到
+>>[ sub multiline blockquote start必需对应
+必需选到
+>>] sub multiline blockquote end 必需对应
 
->sfsdfs不可选到
->[afsdf不可选到
+ > line started with blank, no blockquote 不可选到
+
+>no blank ahead, no blockquote不可选到
+>[no blank ahead, no blockquote不可选到
 
 #3 测试用的样例：列表
 
-- fasdf
--- fasd
--+ fasdf 
+- not ordered list
+-- sub list
+-+ list, sub ordered list 
 
--[ fdasf必需对应
+-[ multiline list必需对应
 必需选到
--] fasdfs必需对应，但不选中后面的
+-] multiline list必需对应，但不选中后面的
 
---[ fdasf必需对应
+--[ multiline list必需对应
 必需选到
---] fasdfs必需对应，但不选中后面的
+--] mulitiline list endf 必需对应，但不选中后面的
 
---[ fasdf无法对应
+--[ no blockquote无法对应
 无对应
--+] fsadf s无法对应
+-+] no blockquote 无法对应
 
-+ ewfasdf可选到
++ ordered list可选到
 
-++- fasdfa s 
+++- ordered list non-ordered list 
 不可选到
 
---fsdfa不可选到
-+fsaddfsa不可选到
- - afsdfa不可选到
- + sdfas不可选到
+--no list不可选到
++no ordered list不可选到
+ - no list不可选到
+ + no ordered list不可选到
 
 
 
 #3 测试用的样例：程序块
 
-``` shell highlight run
+``` shell highlight run init
 
 defun test
 
-df *asf* 不可作用
+line *bold* 不可作用
 
-#1 afsdf 不可作用
+#1 title 不可作用
 
-> afsdf 不可作用
-asdfs
+> blockquote 不可作用
+line
 
-- afsd不可作用
-+ f不可作用
+- list不可作用
++ order-list不可作用
 
-sf
+new line
 ```
 
-``` shell2 khk jh ghjj
-asdf
-sdfs
-1fdsa
-dfasfd要选到
-1fdsa
-1dfas
+``` shell khk jh ghjj
+line 1
+line 2
+line3
+line4 要选到
+5line
+6line
 
 ```
 
 ```
-3asfsad要选到
-asdfsdf
+1line 要选到
+line2
 ```
 
   ```
+  不要选到
   ```
 
 ```
-dsfdfas
+code block
 
 ```
 
 
 ```` 
-fasdf不要选到
+no code block 不要选到
  
 ````
 
 ``` shell
-asdff要选到
+code block 要选到
 ```
 
 ``` 
-  ``` 不要选到 区段要选到
+  ``` no code block不要选到 区段要选到
+  
 ```
 
 
@@ -367,10 +379,10 @@ defun test 要选到
 
 
 ```
-fasdf
-   dsfsdfa
-asdfdsf要选到
-fsdafs
+code block
+   code block
+code block 要选到
+code block
 ```
 
 

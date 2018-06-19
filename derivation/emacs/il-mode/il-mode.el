@@ -116,7 +116,7 @@ arguments."
   '("^#1" "^#2" "^#3" "^#4" "^#5" "^#6" "^#1\\+" "^#2\\+" "^#3\\+" "^#4\\+" "^#5\\+" "^#6\\+" "^```" "^\-" "^\+" "^\>")
   "区块标识清单，此非必要")
 (defvar il-inline-markup
-  '("")
+  '()
   "行内标识清单，此非必要")
 
 (defun il-re-concat (lists)
@@ -124,7 +124,8 @@ arguments."
   (concat
    "\\(?:"
    (mapconcat 'identity lists "\\|")
-   "\\)"))
+   "\\)"
+   ))
 
 (defun il-block-matcher (markup)
   "Return the matcher regexp for a block element."
@@ -134,23 +135,21 @@ arguments."
    "[[:blank:]]+\\).*[\n\r][\\^]*?\\)"
    ))
 
+;; need to fixed
 (defun il-block-multiline-matcher (markup)
   "Return the matcher regexp for a list or blockquote with start and end."
   (concat
-   "\\(\\(^["
+   "\\(\\(^\\(["
    markup
-   "]+\\)\\["
-   "\\([[:blank:]]+\\)\\(.\\|\n\\)*?"
-   "\\(\\2\\]\\)\n?\\)"
-   "\\|\\(^\\(\\(["
+   "]+\\)\\[\\([[:blank:]]+\\)"
+   "\\(.\\|\n\\)*?\\(^\\3\\]\n?\\)\\)"
+   "\\|\\(^\\(["
    markup
-   "]+[[:blank:]]+\\).*[\n\r][\\^]*?\\)\\)"))
+   "]+[[:blank:]]+\\).*[\n\r][\\^]*?\\)\\)"
+   ))
 
 (defun il-block-custom-matcher (markup &optional lang keyword)
-  "Return the matcher regexp for a custom pre block.
-参考markdownmode：^\\(```\\)\\([[:blank:]]*{?[[:blank:]]*\\)\\([^[:space:]]+?\\)?\\(?:[[:blank:]]+\\(.+?\\)\\)?\\([[:blank:]]*}?[[:blank:]]*\\)$
-^\\(```\\)\\(\\s *?\\)$
-"
+  "Return the matcher regexp for a custom pre block."
   (concat
    "\\(^"
    markup
@@ -159,7 +158,8 @@ arguments."
    lang
    keyword
    "\\(.\\|\n\\)*?"
-   "\\1\n?"))
+   "\\(^\\1\\)\n?"
+   ))
 
 (defun il-block-hr-matcher (markup)
   "Return the matcher regexp for a hr block."
@@ -169,21 +169,40 @@ arguments."
    "\\{3\\}[[:blank:]]*\\(?:\n\\|$\\)\\)"
    ))
 
+;; need to fixed
 (defun il-inline-matcher (markup)
   "Return the matcher regexp for an inline markup."
   (concat
-   "\\W\\("
+   "\\W\\(\\["
    markup
-   "\\(?:\\w\\|\\w.*?\\w\\|[[{(].*?\\w\\)"
+   "\\(?:\\w\\|\\w.*?\\w\\|[\\[{(].*?\\w\\)"
    markup
-   "\\)\\W"))
+   "\\]\\)\\W"
+   ))
 
+;; need to fixed
+(defun il-inline-nospace-matcher (markup)
+  "Return the matcher regexp for a inline markup close to other word, 
+neither start with  blank  nor end. such as subscript and superscript.
+"
+  (concat
+   "\\("
+   markup
+   "\\w+"
+   markup
+   "\\)"
+   ))
+
+;; need to fixed
 (defun il-inline-custom-matcher (markup)
   "Return the matcher regexp for a custom mark."
   (concat
-   ""
+   "\\("
    markup
-   ""))
+   "\\(?:\\w\\|\\w.*?\\w\\|[\\[{(].*?\\w\\)"
+   markup
+   "\\)"
+   ))
 
 ;;; Mode setup
 
@@ -219,18 +238,19 @@ arguments."
    `(,(il-block-multiline-matcher ">") 1 'il-blockquote-face t t)
    ;; list
    `(,(il-block-multiline-matcher "+-") 1 'il-list-face t t)
-   ;; pre needs to fixed
-   ;; custom block il-pre-language-face il-pre-keywords-face needs to fixed
+   ;; pre custom block  needs to fixed
+   ;; il-pre-language-face il-pre-keywords-face
    `(,(il-block-custom-matcher "`") 0 'il-pre-face t t)
-   ;; links il-inline-custom-matcher needs to fixed
+   
+   ;; links
+   ;; `(,(il-inline-custom-matcher "\\[") 1 'il-inline-custom-face prepend t)
    ;; inline
    `(,(il-inline-matcher "\\*") 1 'il-bold-face prepend t)
    `(,(il-inline-matcher "/") 1 'il-italic-face prepend t)
    `(,(il-inline-matcher "\\+") 1 'il-deleted-face prepend t)
    `(,(il-inline-matcher "_") 1 'il-underline-face prepend t)
-   ;; needs to fixed
-   `(,(il-inline-matcher "\\^") 1 'il-superscript-face prepend t)
-   `(,(il-inline-matcher "~") 1 'il-subscript-face prepend t)
+   `(,(il-inline-nospace-matcher "\\^") 1 'il-superscript-face prepend t)
+   `(,(il-inline-nospace-matcher "~") 1 'il-subscript-face prepend t)
    `(,(il-inline-matcher "`") 0 'il-code-face prepend t)
    )
   "Keyword/Regexp for fontlocking of `il-mode'.")
