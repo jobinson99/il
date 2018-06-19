@@ -8,7 +8,7 @@
 
 两边要空格么？
 
-注意单个单词和多个单词的表达式区别。
+注意：单个单词和多个单词的表达式区别。
 
 
 ``` 
@@ -111,6 +111,7 @@ word word word `\`nocodestart要选到code code` word ` nocode ` word word word
 
 #2 区块
 
+注意：看不见的换行，断行，缩进等
 
 ```
 标题  正则表达式
@@ -152,7 +153,7 @@ word word word `\`nocodestart要选到code code` word ` nocode ` word word word
 	   颠倒过来，效果一样
 
 程序块  \1 表示引用第一个 匹配组 ```
-\``` ``` shell   /^(`{3})([\s\S]*?)\n?\s*\1\s*(?:\n+|$)/
+ ``` ``` shell   /^(`{3})([\s\S]*?)\n?\s*\1\s*(?:\n+|$)/
                 /(^`{3})([\s\S]*?)(.|\n)*\1/ 
                 /(^`{3})([\s\S]*?).*\1(?=\s*\n$)/gm   解决最后三个`后面跟空格问题。
 		/^(`{3}.*[\n\r][^]*?^`{3})/gm   这也完美
@@ -161,9 +162,9 @@ word word word `\`nocodestart要选到code code` word ` nocode ` word word word
 可参考 markdown mode里的 gfm部分。
 
 自定义区块
-\``` custom xxx yyy
+ ``` custom xxx yyy
  内容
-\```
+ ```
 
 换行 空一行
               /^\n+/
@@ -223,7 +224,7 @@ word word word `\`nocodestart要选到code code` word ` nocode ` word word word
 
 #4 title4 要选到
 
-#111 too many rank, no title 不要选到 
+#111 rank out of range, no title 不要选到 
 
 #2  title2 要选到
 
@@ -246,8 +247,11 @@ no title 不要 选到
 
 #3 测试用的样例：分隔线
 
+line started with blank, no hr
+
  ===
 
+line ended with blank, hr
 === 
 
 ===   
@@ -257,6 +261,8 @@ no title 不要 选到
 ===
 
   ===
+
+to many tokens, no hr
 
 =====
 
@@ -316,7 +322,7 @@ no title 不要 选到
 
 #3 测试用的样例：程序块
 
-``` shell highlight run init
+``` shell highlight pretty init
 
 defun test
 
@@ -333,8 +339,8 @@ line
 new line
 ```
 
-``` shell khk jh ghjj
-line 1
+``` shell custom word tag
+code block line 1
 line 2
 line3
 line4 要选到
@@ -368,13 +374,15 @@ code block 要选到
 ```
 
 ``` 
-  ``` no code block不要选到 区段要选到
+  ``` no code block start不要选到
+  code block区段要选到
+  ```
   
 ```
 
 
-``` shell highlight run init
-defun test 要选到
+``` emacs-lisp highlight run init
+defun functionname 要选到
 ```
 
 

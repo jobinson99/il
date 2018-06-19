@@ -95,7 +95,7 @@ arguments."
 
 
 ;;; Constants =====================================================
-(defconst il-mode-version "20180614-alpha"
+(defconst il-mode-version "20180619"
   "Version of `il-mode'.")
 
 (defconst il-output-buffer-name "*il-output*"
@@ -226,32 +226,32 @@ neither start with  blank  nor end. such as subscript and superscript.
 (defvar il-font-lock-keywords
   (list
    ;; headers
-   `(,(il-block-matcher "#1\\+?") 1 'il-h1-face t t)
-   `(,(il-block-matcher "#2\\+?") 1 'il-h2-face t t)
-   `(,(il-block-matcher "#3\\+?") 1 'il-h3-face t t)
-   `(,(il-block-matcher "#4\\+?") 1 'il-h4-face t t)
-   `(,(il-block-matcher "#5\\+?") 1 'il-h5-face t t)
-   `(,(il-block-matcher "#6\\+?") 1 'il-h6-face t t)
+   `(,(il-block-matcher "#1\\+?") 1 'il-face-h1 t t)
+   `(,(il-block-matcher "#2\\+?") 1 'il-face-h2 t t)
+   `(,(il-block-matcher "#3\\+?") 1 'il-face-h3 t t)
+   `(,(il-block-matcher "#4\\+?") 1 'il-face-h4 t t)
+   `(,(il-block-matcher "#5\\+?") 1 'il-face-h5 t t)
+   `(,(il-block-matcher "#6\\+?") 1 'il-face-h6 t t)
    ;; hr
-   `(,(il-block-hr-matcher "=") 1 'il-hr-face t t)
+   `(,(il-block-hr-matcher "=") 1 'il-face-hr t t)
    ;; blockquotes
-   `(,(il-block-multiline-matcher ">") 1 'il-blockquote-face t t)
+   `(,(il-block-multiline-matcher ">") 1 'il-face-blockquote t t)
    ;; list
-   `(,(il-block-multiline-matcher "+-") 1 'il-list-face t t)
+   `(,(il-block-multiline-matcher "+-") 1 'il-face-list t t)
    ;; pre custom block  needs to fixed
    ;; il-pre-language-face il-pre-keywords-face
-   `(,(il-block-custom-matcher "`") 0 'il-pre-face t t)
+   `(,(il-block-custom-matcher "`") 0 'il-face-pre t t)
    
    ;; links
-   ;; `(,(il-inline-custom-matcher "\\[") 1 'il-inline-custom-face prepend t)
+   ;; `(,(il-inline-custom-matcher "\\[") 1 'il-face-inline-custom prepend t)
    ;; inline
-   `(,(il-inline-matcher "\\*") 1 'il-bold-face prepend t)
-   `(,(il-inline-matcher "/") 1 'il-italic-face prepend t)
-   `(,(il-inline-matcher "\\+") 1 'il-deleted-face prepend t)
-   `(,(il-inline-matcher "_") 1 'il-underline-face prepend t)
-   `(,(il-inline-nospace-matcher "\\^") 1 'il-superscript-face prepend t)
-   `(,(il-inline-nospace-matcher "~") 1 'il-subscript-face prepend t)
-   `(,(il-inline-matcher "`") 0 'il-code-face prepend t)
+   `(,(il-inline-matcher "\\*") 1 'il-face-bold prepend t)
+   `(,(il-inline-matcher "/") 1 'il-face-italic prepend t)
+   `(,(il-inline-matcher "\\+") 1 'il-face-deleted prepend t)
+   `(,(il-inline-matcher "_") 1 'il-face-underline prepend t)
+   `(,(il-inline-nospace-matcher "\\^") 1 'il-face-superscript prepend t)
+   `(,(il-inline-nospace-matcher "~") 1 'il-face-subscript prepend t)
+   `(,(il-inline-matcher "`") 0 'il-face-code prepend t)
    )
   "Keyword/Regexp for fontlocking of `il-mode'.")
 
@@ -259,107 +259,113 @@ neither start with  blank  nor end. such as subscript and superscript.
   "Faces use in il mode for syntax highlighting."
   :group 'faces)
 
-(defface il-h1-face
+(defface il-face-h1
   '((t (:height 2.0 :weight bold)))
   "Face used to highlight h1 headers."
   :group 'il-faces)
 
-(defface il-h2-face
+(defface il-face-h2
   '((t (:height 1.75 :weight bold)))
   "Face used to highlight h2 headers."
   :group 'il-faces)
 
-(defface il-h3-face
+(defface il-face-h3
   '((t (:height 1.6 :weight bold)))
   "Face used to highlight h3 headers."
   :group 'il-faces)
 
-(defface il-h4-face
+(defface il-face-h4
   '((t (:height 1.35 :weight bold)))
   "Face used to highlight h4 headers."
   :group 'il-faces)
 
-(defface il-h5-face
+(defface il-face-h5
   '((t (:height 1.2 :weight bold)))
   "Face used to highlight h5 headers."
   :group 'il-faces)
 
-(defface il-h6-face
+(defface il-face-h6
   '((t (:height 1.0 :weight bold)))
   "Face used to highlight h6 headers."
   :group 'il-faces)
 
-(defface il-blockquote-face
+(defface il-face-blockquote
   '((t (:background "cyan")))
   "Face used to highlight blockquotes."
   :group 'il-faces)
 
-(defface il-list-face
+(defface il-face-list
   '((t (:background "ivory3")))
   "Face used for list item"
   :group 'il-faces)
 
-(defface il-hr-face
+(defface il-face-hr
   '((t (:background "ivory4")))
   "Face used for <hr> blocks"
   :group 'il-faces)
 
-(defface il-pre-face
+(defface il-face-pre
   '((t (:background "ivory2")))
   "Face used for <pre> blocks"
   :group 'il-faces)
 
-(defface il-pre-language-face
+(defface il-face-pre-language
   '((t (:foreground "orange")))
   "Face used for <pre> language names."
   :group 'il-faces)
 
-(defface il-pre-keywords-face
+(defface il-face-pre-keywords
   '((t (:foreground "brown")))
   "Face used for <pre> keywords."
   :group 'il-faces)
 
-(defface il-italic-face
+;; custom block meta comment table need to fixed
+(defface il-face-comment
+  '((t (:background "ivory2")))
+  "Face used for comment blocks"
+  :group 'il-faces)
+
+(defface il-face-italic
   '((t (:slant italic)))
   "Face used for italic text."
   :group 'il-faces)
 
-(defface il-bold-face
+(defface il-face-bold
   '((t (:weight bold)))
   "Face used for bold text."
   :group 'il-faces)
 
-(defface il-deleted-face
+(defface il-face-deleted
   '((t (:strike-through t)))
   "Face used for deleted words."
   :group 'il-faces)
 
-(defface il-underline-face
+(defface il-face-underline
   '((t (:underline t)))
   "Face used for underline words."
   :group 'il-mode)
 
-(defface il-superscript-face
+(defface il-face-superscript
   '((t (:height 0.8 :raise 0.3)))
   "Face used for superscript words."
   :group 'il-faces)
 
-(defface il-subscript-face
+(defface il-face-subscript
   '((t (:height 0.8 :raise -0.3)))
   "Face used for subscript words."
   :group 'il-faces)
 
-(defface il-code-face
+(defface il-face-code
   '((t (:background "cyan")))
   "Face used to highlight inline code."
   :group 'il-faces)
 
-(defface il-link-face
+(defface il-face-link
   '((t (:foreground "pink")))
   "Face used to highlight links."
   :group 'il-mode)
 
-(defface il-inline-custom-face
+(defface il-face-inline-custom
   '((t (:foreground "gold")))
   "Face used for customized style inline words."
   :group 'il-faces)
@@ -369,6 +375,8 @@ neither start with  blank  nor end. such as subscript and superscript.
 
 
 ;;; Element Insertion =============================================
+
+;; TODO or use snippets
 
 (defun il-export () "")
 (defun il-insert-title () "")
