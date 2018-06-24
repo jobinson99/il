@@ -12,25 +12,24 @@
 注意：单个单词和多个单词的表达式区别。
 
 
+``` 
 
-```
 加粗
-**xxx**         / \*\w+\* /g
+*xxx*         / \*\w+\* /g
               / \*.+\* /g
 	      / \*[\s\S]+?\* /g
               / \*(?=\S)([\s\S]*?\S)\* (?!\*)/g
-	      emacs版：\\(\\([*]\\{2\\}\\)\\(?:\\w\\|\\w.*?\\w\\|[\\[{(]\\w\\)\\2\\)
-	      
+	      emacs版：
 斜体
-//xxx//         / \/\w+\/ /g
+/xxx/         / \/\w+\/ /g
 	      / \/(?=\S)([\s\S]*?\S)\/ (?!\/)/g
 	      emacs版：
 删除线
-++xxx++         / \+\w+\+ /g
++xxx+         / \+\w+\+ /g
 	      / \+(?=\S)([\s\S]*?\S)\+ (?!\+)/g
 	      emacs版：
 下划线
-__xxx__         / \_\w+\_ /g
+_xxx_         / \_\w+\_ /g
 	      / \_(?=\S)([\s\S]*?\S)\_ (?!\_)/g
 	      emacs版：
 
@@ -42,7 +41,7 @@ __xxx__         / \_\w+\_ /g
 	      emacs版：\\^\\w+\\^ 仍有诸多bug
 	     
 代码
-``xxx``         / \`\w+\` /g
+`xxx`         / \`\w+\` /g
 	      / \`(?=\S)([\s\S]*?\S)\` (?!\`)/g
 	      emacs版：
 	     
@@ -64,50 +63,35 @@ __xxx__         / \_\w+\_ /g
 #3 测试数据：行内
 
 
-word **bold要选到bold** word
-inword**bold词内要选到**word
-word **many words bold要选到bold** 
-word ** start blank nobold不选到nobold **
-word **bold要选到bold****  
-**start line bold**bold选到bold
-中文**加粗**中文加粗，中文 **加 粗**
+ *bold要选到x* 
+ *bold blod要选到bold* 
+ * blod不选到f *
+ *bold要选到bold**** 
+da*nobold不选到nobold* 
+*nobold*noblod不选到nobold
 
-***** no bold 
+ /italic italic要选到italic/
+/noitalic不选到noitalic/
 
-word**bold[word]bold**word
-word**{nobold}** why?
-word **(nobold)** why?
-word **[[nobold]]** why?
-
- //italic italic要选到italic// 
-//italic选到italic//
-
- ++strike through 要选到strike through++ 
-begin ++strikethrough要选到strikethrough++ end
-++start line strikethrough不选到nostrikethrough++ no strike through
- ++ nostrikethrough不选到nostrikethrough ++
- ++strikethrough要选到strikethrough+\++++ +++++
-
+ +strike through 要选到strike through+ 
+begin +strikethrough要选到strikethrough+ end
++nostrikethrough不选到nostrikethrough+ no strike through
+ + nostrikethrough不选到nostrikethrough +
+ +strikethrough要选到strikethrough+++++
 
 3 + 5 = 8 4 - 2 = 2  no inline style
-1 + 2 + 3 = 6
-1+2+3=6
 
-word^^superscript上标要选到superscript^^word
-word\^^nosuperscript不选到nosuperscript^^superscript要选到superscript^^word
-word^^superscript要选到superscript\^^nosuperscript要选到superscript^^word
-^^nosuperscript不选到^^ word
-Roll ov^^e^^r matches or the ex\^^p不选到res^^superscript要选到^^superscript. blank superscript nosuperscript^^ ^^ ^^^^or details.Chea^^superscript要选到h^^t不选到sh^^h要选到^^ eet, full Ref^^er要选到e\^^n要选到^^ce, results ^^wi不选到th^^ the Tools below. Replace & List ou^^67要选到tp^^ut
+word^superscript上标要选到superscript^word
+word\^nosuperscript不选到nosuperscript^superscript要选到superscript^word
+word^superscript要选到superscript\^nosuperscript要选到superscript^word
+^nosuperscript不选到^ word
+Roll ov^e^r matches or the ex\^p不选到res^sgj要选到gjh^ion f^ ^ ^^or details.Chea^superscript要选到h^t不选到sh^h要选到^ eet, full Ref^er要选到e\^n要选到^ce, results ^wi不选到th^ the Tools below. Replace & List ou^67要选到tp^ut
 
-word ~~subscript下标~~ word word ~~下标superscript~~ word word~~supscriptaf~~ 
+word ~subscript下标~ word word ~下标superscript~ word word~supscriptaf~ 
 
-word ``code要选到`` word ``code code要选到code`` word
-word ``code with \``code\`` code`` word
+word 'code要选到' word 'code code要选到code' word
 
-word word ``\``nocodestart要选到code code`` word.
-start and end with space `` nocode `` word. 
-
-\\``no code `` code begin`` code begin
+word word word `\`nocodestart要选到code code` word ` nocode ` word word word 
 
 
 #3 连接
@@ -117,21 +101,12 @@ start and end with space `` nocode `` word.
 [xxx](yyy)      / \[\w+\]\(.+\) /g
 [xxx| yyy]      / \[\w+\| .+\]/g
                 / \[.+\| .+\]/g     可多个单词描述，加空格
-
-[[link : name]]           emacs版： \\(\\[\\{2\\}\\)\\(?:.*?\\w\\)\\([[:space:]]:[[:space:]]\\)\\(?:.*?\\w\\)\\(\\]\\{2\\}\\)
-
+[[http://www.bian.ga][bian.ga]]
+[[dir/image.png][imagename]]
 
 [[#anchor][anchorname]]
 [[:anchor][anchor content]]
 
-
-#3 测试数据：连接
-
-[[>http://www.bian.ga/连接地址 : bian.ga链接名]]
-[[!dir/image.png图片位置 :: imagename图片标题]]
-[[#站内id : id content话题名]]
-[[^ref页内引用 : position in place位置]]
-[[class name 类名 : content内容]]
 
 
 
@@ -142,15 +117,15 @@ start and end with space `` nocode `` word.
 ```
 标题  正则表达式
  #1 #2 #3   /^(#[1-6]{1}\+?\s*) ([^\n]+?)\s*(?:\n$)/gm bug多
-            /^#[1-6]{1}\+?\s.+\n$/gm    仍有bug，断行会使其失效
-	    /^#[1-6]{1}\+?\s.+\n*$/gm   从此处下面的都消除了断行 失效问题。但若第一行无空格，则连续断行会被选取。
-	    /^#[1-6]{1}\+?\s.+\n?$/gm
-	    /^#[1-6]{1}\+?\s.+\n*?$/gm
-	    /^#[1-6]{1}\+?\s.+(?:\n$)/gm
-	    /^(#[1-6]{1}\+?) .+(?:\n|$)/gm 消除了第一行无空格，连续断行会被选取问题。
-	    ^(#[1-6]{1}\+?\s+.*[\n\r][^]*?)  这也行
-	   
-	    emacs版：^\\(\\(#[1-6]\\+?[[:blank:]]+\\).*[\n\r][\\^]*?\\)
+          /^#[1-6]{1}\+?\s.+\n$/gm    仍有bug，断行会使其失效
+	  /^#[1-6]{1}\+?\s.+\n*$/gm   从此处下面的都消除了断行 失效问题。但若第一行无空格，则连续断行会被选取。
+	  /^#[1-6]{1}\+?\s.+\n?$/gm
+	  /^#[1-6]{1}\+?\s.+\n*?$/gm
+	  /^#[1-6]{1}\+?\s.+(?:\n$)/gm
+	  /^(#[1-6]{1}\+?) .+(?:\n|$)/gm 消除了第一行无空格，连续断行会被选取问题。
+	  ^(#[1-6]{1}\+?\s+.*[\n\r][^]*?)  这也行
+	  
+	  emacs版：^\\(\\(#[1-6]\\+?[[:blank:]]+\\).*[\n\r][\\^]*?\\)
 	  
 捕获 #1 ~#6 #1+~#6+ 且 句末换行。
 但不 捕获立刻换行和多个 #若干空格 后直接换行的。
@@ -420,16 +395,7 @@ code block
 ```
 
 
-```
-code
-``` no code end
-```
 
-```    
-code
-```
 
-```
-code
-```
+
 

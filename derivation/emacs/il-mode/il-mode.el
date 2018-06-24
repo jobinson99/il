@@ -148,6 +148,7 @@ arguments."
    "]+[[:blank:]]+\\).*[\n\r][\\^]*?\\)\\)"
    ))
 
+;; need to fixed 
 (defun il-block-custom-matcher (markup &optional lang keyword)
   "Return the matcher regexp for a custom pre block."
   (concat
@@ -158,7 +159,7 @@ arguments."
    lang
    keyword
    "\\(.\\|\n\\)*?"
-   "\\(^\\1\\)\n?"
+   "\\(^\\1\\)\\(?:\n$\\)"
    ))
 
 (defun il-block-hr-matcher (markup)
@@ -166,42 +167,43 @@ arguments."
   (concat
    "\\(^"
    markup
-   "\\{3\\}[[:blank:]]*\\(?:\n\\|$\\)\\)"
+   "\\{3\\}[[:space:]]*\\(?:$\\)\\)"
    ))
 
-;; need to fixed
+
+;; need to fixed the start with \
 (defun il-inline-matcher (markup)
   "Return the matcher regexp for an inline markup."
   (concat
-   "\\W\\(\\["
+   "\\(\\(["
    markup
-   "\\(?:\\w\\|\\w.*?\\w\\|[\\[{(].*?\\w\\)"
-   markup
-   "\\]\\)\\W"
+   "]\\{2\\}\\)\\(?:\\w\\|\\w.*?\\w\\|[[{(].*?\\w\\)"
+   "\\2\\)"
    ))
 
-;; need to fixed
+;; need to fixed the start with \
 (defun il-inline-nospace-matcher (markup)
   "Return the matcher regexp for a inline markup close to other word, 
 neither start with  blank  nor end. such as subscript and superscript.
 "
   (concat
-   "\\("
+   "\\(\\(["
    markup
-   "\\w+"
-   markup
-   "\\)"
+   "]\\{2\\}\\)\\(?:\\w\\|\\w.*?\\w\\|[[{(].*?\\w\\)"
+   "\\2\\)"
    ))
 
 ;; need to fixed
-(defun il-inline-custom-matcher (markup)
+(defun il-inline-custom-matcher (markup-start markup-seperator markup-end)
   "Return the matcher regexp for a custom mark."
   (concat
-   "\\("
-   markup
-   "\\(?:\\w\\|\\w.*?\\w\\|[\\[{(].*?\\w\\)"
-   markup
-   "\\)"
+   "\\(\\("
+   markup-start
+   "\\{2\\}\\)\\(?:.*?\\w\\)\\([[:space:]]"
+   markup-seperator
+   "[[:space:]]\\)\\(?:.*?\\w\\)\\("
+   markup-end
+   "\\{2\\}\\)\\)"
    ))
 
 ;;; Mode setup
@@ -243,14 +245,15 @@ neither start with  blank  nor end. such as subscript and superscript.
    `(,(il-block-custom-matcher "`") 0 'il-face-pre t t)
    
    ;; links
-   ;; `(,(il-inline-custom-matcher "\\[") 1 'il-face-inline-custom prepend t)
+   `(,(il-inline-custom-matcher "\\[" ":" "\\]") 1 'il-face-inline-custom prepend t)
+   ;; inline custom
    ;; inline
    `(,(il-inline-matcher "\\*") 1 'il-face-bold prepend t)
    `(,(il-inline-matcher "/") 1 'il-face-italic prepend t)
    `(,(il-inline-matcher "\\+") 1 'il-face-deleted prepend t)
    `(,(il-inline-matcher "_") 1 'il-face-underline prepend t)
-   `(,(il-inline-nospace-matcher "\\^") 1 'il-face-superscript prepend t)
-   `(,(il-inline-nospace-matcher "~") 1 'il-face-subscript prepend t)
+   `(,(il-inline-matcher "\\^") 1 'il-face-superscript prepend t)
+   `(,(il-inline-matcher "~") 1 'il-face-subscript prepend t)
    `(,(il-inline-matcher "`") 0 'il-face-code prepend t)
    )
   "Keyword/Regexp for fontlocking of `il-mode'.")
@@ -295,17 +298,17 @@ neither start with  blank  nor end. such as subscript and superscript.
   :group 'il-faces)
 
 (defface il-face-list
-  '((t (:background "ivory3")))
+  '((t (:background "LemonChiffon2")))
   "Face used for list item"
   :group 'il-faces)
 
 (defface il-face-hr
-  '((t (:background "ivory4")))
+  '((t (:background "gray")))
   "Face used for <hr> blocks"
   :group 'il-faces)
 
 (defface il-face-pre
-  '((t (:background "ivory2")))
+  '((t (:background "LemonChiffon3")))
   "Face used for <pre> blocks"
   :group 'il-faces)
 
@@ -345,6 +348,7 @@ neither start with  blank  nor end. such as subscript and superscript.
   "Face used for underline words."
   :group 'il-mode)
 
+;; 高低度还不够
 (defface il-face-superscript
   '((t (:height 0.8 :raise 0.3)))
   "Face used for superscript words."
@@ -356,17 +360,17 @@ neither start with  blank  nor end. such as subscript and superscript.
   :group 'il-faces)
 
 (defface il-face-code
-  '((t (:background "cyan")))
+  '((t (:background "brown" :foreground "white")))
   "Face used to highlight inline code."
   :group 'il-faces)
 
 (defface il-face-link
-  '((t (:foreground "pink")))
+  '((t (:foreground "blue")))
   "Face used to highlight links."
   :group 'il-mode)
 
 (defface il-face-inline-custom
-  '((t (:foreground "gold")))
+  '((t (:foreground "brown")))
   "Face used for customized style inline words."
   :group 'il-faces)
 
