@@ -177,10 +177,10 @@ arguments."
 (defun il-inline-matcher (markup)
   "Return the matcher regexp for an inline markup."
   (concat
-   "\\(\\["
+   "\\(\\(\\[["
    markup
-   "[[:space:]]+\\)\\(?:\\w\\|\\w.*?\\w\\|[[{(].*?\\w\\)"
-   "\\(\\]\\)"
+   "]\\{1\\}[[:space:]]+\\)\\(?:\\w\\|\\w.*?\\w\\|[[{(].*?\\w\\)"
+   "\\(\\]\\)\\)"
    ))
 
 (defun il-inline-oneword-matcher (markup)
@@ -197,22 +197,22 @@ such as subscript and superscript used in math and chemistry.
 (defun il-inline-link-matcher (markup markup-seperator)
   "Return the matcher regexp for a link."
   (concat
-   "\\(\\[["
+   "\\(\\(\\[["
    markup
-   "][[:space:]]*\\)\\(?:.*?\\w\\)\\("
+   "]\\{1\\}[[:space:]]*\\)\\(?:.*?\\w\\)\\("
    markup-seperator
    "+\\)\\(?:\\w\\|\\w.*?\\w\\|[[{(].*?\\w\\)"
-   "\\(\\]\\)"
+   "\\(\\]\\)\\)"
    ))
 
 (defun il-inline-custom-matcher (markup-seperator)
   "Return the matcher regexp for a custom mark."
   (concat
-   "\\(\\["
+   "\\(\\(\\["
    "\\(?:\\w.*?\\)\\(["
    markup-seperator
    "]\\B[[:space:]]\\)\\)\\(?:.*?\\w\\)"
-   "\\(\\]\\)"
+   "\\(\\]\\)\\)"
    ))
 
 ;;; Mode setup
@@ -254,7 +254,7 @@ such as subscript and superscript used in math and chemistry.
    `(,(il-block-custom-matcher "=") 0 'il-face-pre t t)
    
    ;; links
-   `(,(il-inline-link-matcher "\\<\\>\\!\\#" "[[:space:]]") 1 'il-face-link prepend t)
+   `(,(il-inline-link-matcher "<>!#" "[[:space:]]") 1 'il-face-link prepend t)
    
    ;; inline custom
    `(,(il-inline-custom-matcher "\\:") 1 'il-face-inline-custom prepend t)
