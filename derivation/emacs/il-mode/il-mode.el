@@ -6,7 +6,7 @@
 ;; Author: Atlas Jobinson <jobinson99@hotmail.com>
 ;; Maintainer: Atlas Jobinson <jobinson99@hotmail.com>
 ;; Created: June 14, 2018
-;; Version: 20180614-alpha
+;; Version: 20180625-alpha
 ;; Package-Requires: ((emacs "25.1") (cl-lib "0.5"))
 ;; Keywords: Il
 ;; URL: https://il.bian.ga
@@ -95,7 +95,7 @@ arguments."
 
 
 ;;; Constants =====================================================
-(defconst il-mode-version "20180619"
+(defconst il-mode-version "20180625"
   "Version of `il-mode'.")
 
 (defconst il-output-buffer-name "*il-output*"
@@ -113,7 +113,7 @@ arguments."
 
 
 (defvar il-blocks
-  '("^#1" "^#2" "^#3" "^#4" "^#5" "^#6" "^#1\\+" "^#2\\+" "^#3\\+" "^#4\\+" "^#5\\+" "^#6\\+" "^```" "^\-" "^\+" "^\>")
+  '("^#1" "^#2" "^#3" "^#4" "^#5" "^#6" "^#1\\+" "^#2\\+" "^#3\\+" "^#4\\+" "^#5\\+" "^#6\\+" "^=[" "=]" "^\-" "^\+" "^\>")
   "区块标识清单，此非必要")
 (defvar il-inline-markup
   '()
@@ -148,18 +148,20 @@ arguments."
    "]+[[:blank:]]+\\).*[\n\r][\\^]*?\\)\\)"
    ))
 
-;; need to fixed 
+;; need to fixed language and keyword
 (defun il-block-custom-matcher (markup &optional lang keyword)
   "Return the matcher regexp for a custom pre block."
   (concat
-   "\\(^"
+   "\\(^["
    markup
-   "\\{3\\}\\)"
+   "]+\\)\\["
    "\\(\\s \\)"
    lang
    keyword
    "\\(.\\|\n\\)*?"
-   "\\(^\\1\\)\\(?:\n$\\)"
+   "\\(^["
+   markup
+   "]+\\]\\)\\(?:\n$\\)"
    ))
 
 (defun il-block-hr-matcher (markup)
@@ -171,39 +173,46 @@ arguments."
    ))
 
 
-;; need to fixed the start with \
+;; start with \ will miss match, but can change the content easily to fixed this problem
 (defun il-inline-matcher (markup)
   "Return the matcher regexp for an inline markup."
   (concat
-   "\\(\\(["
+   "\\(\\["
    markup
-   "]\\{2\\}\\)\\(?:\\w\\|\\w.*?\\w\\|[[{(].*?\\w\\)"
-   "\\2\\)"
+   "[[:space:]]+\\)\\(?:\\w\\|\\w.*?\\w\\|[[{(].*?\\w\\)"
+   "\\(\\]\\)"
    ))
 
-;; need to fixed the start with \
-(defun il-inline-nospace-matcher (markup)
-  "Return the matcher regexp for a inline markup close to other word, 
-neither start with  blank  nor end. such as subscript and superscript.
+(defun il-inline-oneword-matcher (markup)
+  "Return the matcher regexp for only  one inline markup started, it can ended with blank.
+such as subscript and superscript used in math and chemistry.
 "
   (concat
-   "\\(\\(["
+   "\\(\\[["
    markup
-   "]\\{2\\}\\)\\(?:\\w\\|\\w.*?\\w\\|[[{(].*?\\w\\)"
-   "\\2\\)"
+   "][[:space:]]+\\)\\(?:\\w\\|\\w.*?\\w\\|[[{(].*?\\w\\)"
+   "[[:space:]]+"
    ))
 
-;; need to fixed
-(defun il-inline-custom-matcher (markup-start markup-seperator markup-end)
+(defun il-inline-link-matcher (markup markup-seperator)
+  "Return the matcher regexp for a link."
+  (concat
+   "\\(\\[["
+   markup
+   "][[:space:]]*\\)\\(?:.*?\\w\\)\\("
+   markup-seperator
+   "+\\)\\(?:\\w\\|\\w.*?\\w\\|[[{(].*?\\w\\)"
+   "\\(\\]\\)"
+   ))
+
+(defun il-inline-custom-matcher (markup-seperator)
   "Return the matcher regexp for a custom mark."
   (concat
-   "\\(\\("
-   markup-start
-   "\\{2\\}\\)\\(?:.*?\\w\\)\\([[:space:]]"
+   "\\(\\["
+   "\\(?:\\w.*?\\)\\(["
    markup-seperator
-   "[[:space:]]\\)\\(?:.*?\\w\\)\\("
-   markup-end
-   "\\{2\\}\\)\\)"
+   "]\\B[[:space:]]\\)\\)\\(?:.*?\\w\\)"
+   "\\(\\]\\)"
    ))
 
 ;;; Mode setup
@@ -242,11 +251,13 @@ neither start with  blank  nor end. such as subscript and superscript.
    `(,(il-block-multiline-matcher "+-") 1 'il-face-list t t)
    ;; pre custom block  needs to fixed
    ;; il-pre-language-face il-pre-keywords-face
-   `(,(il-block-custom-matcher "`") 0 'il-face-pre t t)
+   `(,(il-block-custom-matcher "=") 0 'il-face-pre t t)
    
    ;; links
-   `(,(il-inline-custom-matcher "\\[" ":" "\\]") 1 'il-face-inline-custom prepend t)
+   `(,(il-inline-link-matcher "\\<\\>\\!\\#" "[[:space:]]") 1 'il-face-link prepend t)
+   
    ;; inline custom
+   `(,(il-inline-custom-matcher "\\:") 1 'il-face-inline-custom prepend t)
    ;; inline
    `(,(il-inline-matcher "\\*") 1 'il-face-bold prepend t)
    `(,(il-inline-matcher "/") 1 'il-face-italic prepend t)
@@ -254,7 +265,7 @@ neither start with  blank  nor end. such as subscript and superscript.
    `(,(il-inline-matcher "_") 1 'il-face-underline prepend t)
    `(,(il-inline-matcher "\\^") 1 'il-face-superscript prepend t)
    `(,(il-inline-matcher "~") 1 'il-face-subscript prepend t)
-   `(,(il-inline-matcher "`") 0 'il-face-code prepend t)
+   `(,(il-inline-matcher "=") 0 'il-face-code prepend t)
    )
   "Keyword/Regexp for fontlocking of `il-mode'.")
 
