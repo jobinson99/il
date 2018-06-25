@@ -4,6 +4,8 @@
 
 > 感觉不到编辑器
 
+状态：语法风格已经大致确定，只剩几个小细节
+
 ## 特点
 
 + 区块全部无行首缩进
@@ -40,44 +42,41 @@
 ```
 
 ```
-标题
-#1
-#1+
+#1 标题1 title 1
+#2 标题2 title 2
+#1+   有序标题 ordered title 1
 
 
-=== 分隔线
+=== 分隔线 hr
 
-列表
--
-+
+- 列表list
++ 有序列表order list
 -+
--[
--]
+-[  多行列表开始 multiline list start
+-]  多行列表终止 multiline list end
+
+> 应用块blockquote
+>[ 多行引用块开始 multiline blockquote start
+>] 多行引用块终止 multiline blockquote end
 
 
-引用块
->
->[
->]
-
-代码块、扩展块
-=[ mark
+=[ 代码块，各种扩展块 language start
 =]
 
-或 任意多=
+或 任意多= or as many = as you wish
 =============[
 代码
 ===]
 
-注释
+注释 comment
 =[ comment
 =]
 
-元信息
+元信息 meta
 =[ meta
 =]
 
-表格
+表格 table
 =[ table
 =]
 
@@ -86,7 +85,6 @@
 效果 见 截图，实测效果可参见 test文件夹
 
 ![截图](/docs/images/screen1.png)
-
 
 
 ## 探索中的规则
@@ -105,6 +103,7 @@
 - [x] 为emacs编写一个 il-mode
 - [ ] 编写 snippet
 - [ ] 编写 kwrite 规则 [kde syntax highlighting framework](https://github.com/KDE/syntax-highlighting)
+- [x] 编写一个适配手机编辑器的高亮方案 jota，20180625 爬山登顶后，小坐一会，搞定。
 - [ ] 制造一个编辑器，使其能把各种媒体内容放入，保存时归档，打开是解开归档。从而形成一个编辑器。
 
 
