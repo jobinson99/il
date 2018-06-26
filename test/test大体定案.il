@@ -85,8 +85,9 @@ word [ * start blank nobold不选到nobold ]
 word [** nobold不选到nobold]
 word [* bold要选到第一个]]]]]
 word [* bold \] word]
-[* start line bold选到] content
-中文[* 加粗]中文加粗，中文 [*加 粗]
+[* start line bold加粗] content
+word \[* word [* bold加粗] content
+中文[* 加粗]中文加粗，中文 [*不加 粗]
 
 [*] no bold 
 [**] no bold
@@ -119,11 +120,11 @@ Roll ov[^ e]r matches or the ex\[^ p不选到res[^ superscript要选到]superscr
 
 word [~ subscript下标] word word [~ 下标superscript] word word[~ supscript] 
 
-word [= code要选到] word [= code code要选到code] word
+word [= code行内代码] word [= inline code行内代码code] word
 word [= code with \]code\] code]word
 
-word word [= \]nocode end要选到code code] word.
-start and end with space [` code ] word. 
+word word [= \]nocode end行内代码code code] word.
+start and end with space [= code行内代码 ] word. 
 
 \[= no code [= code begin] code begin
 
@@ -212,7 +213,7 @@ start and end with space [` code ] word.
 			  emacs版：\\(^[=]+\\)\\[\\(\\s \\)\\(.\\|\n\\)*?\\(^[=]+\\]\\)\\(?:\n$\\)
  ``` ``` shell   /^(`{3})([\s\S]*?)\n?\s*\1\s*(?:\n+|$)/
                 /(^`{3})([\s\S]*?)(.|\n)*\1/ 
-                /(^`{3})([\s\S]*?).*\1(?=\s*\n$)/gm   解决最后三个`后面跟空格问题。
+                /(^`{3})([\s\S]*?).*\1(?=\s*\n$)/gm   解决结束的三个`后面跟空格无法正确识别问题。
 		/^(`{3}.*[\n\r][^]*?^`{3})/gm   这也可
                 emacs版：\\(^```\\)\\(\\s \\)\\(.\\|\n\\)*?\\(^```\\)\\n?
 注意：所有的选择在程序块里，都应失效。
@@ -332,15 +333,15 @@ to many tokens, no hr
 
 >>> rank 3 blockquote
 
->[ multiline blockquote start
-
->[ multiline blockquote 必需对应
+>[ multiline blockquote  start必需对应
 必需选到
->] multiline blockquote end 必需对应
+multiline blockquote end 必需对应
+>]
 
 >>[ sub multiline blockquote start必需对应
 必需选到
->>] sub multiline blockquote end 必需对应
+sub multiline blockquote end 必需对应
+>>]
 
  > line started with blank, no blockquote 不可选到
 
@@ -355,11 +356,13 @@ to many tokens, no hr
 
 -[ multiline list必需对应
 必需选到
--] multiline list必需对应，但不选中后面的
+multiline list必需对应，但不选中后面的
+-]
 
 --[ multiline list必需对应
 必需选到
---] mulitiline list endf 必需对应，但不选中后面的
+mulitiline list endf 必需对应，但不选中后面的
+--] 
 
 --[ no blockquote无法对应
 无对应
@@ -463,4 +466,12 @@ code
 ==[
 code
 ==]
+
+====[ comment
+comment
+==]
+
+==[ test
+sfdf
+==]]]]
 

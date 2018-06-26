@@ -3,8 +3,9 @@
 ![标志](/docs/images/il-logo.png)
 
 > 感觉不到编辑器
+> ease and extensible
 
-状态：语法风格已经大致确定，只剩几个小细节
+状态：语法风格已经大致确定，只剩几个小细节可能略有调整。
 
 ## 特点
 
@@ -19,9 +20,9 @@
 - 视觉上要舒服
 
 
-## 已经稳定的规则
+## 已经稳定的规则 stable rules
 
-行内标识
+行内标识 inline markup
 ```
 [* 加粗bold]
 [/ 斜体italic]
@@ -32,7 +33,7 @@
 [= 代码code]
 ```
 
-连接
+连接 link
 ```
 [>连接地址http://www.bian.ga/ 链接名bian.ga]
 [!图片位置dir/image.png 图片标题imagename]
@@ -41,6 +42,7 @@
 [类名class name: 内容content]
 ```
 
+区块 block
 ```
 #1 标题1 title 1
 #2 标题2 title 2
@@ -60,13 +62,14 @@
 >] 多行引用块终止 multiline blockquote end
 
 
-=[ 代码块，各种扩展块 language start
-=]
+=[ 代码块，各种扩展块开始 language start
+=] 代码块，扩展块终止 language end
 
 或 任意多= or as many = as you wish
-=============[
-代码
+=============[ javascript hightlight pretty init
+代码 code
 ===]
+
 
 注释 comment
 =[ comment
@@ -80,6 +83,14 @@
 =[ table
 =]
 
+数学公式 math
+=[ math
+=]
+
+矢量图 vector diagram
+=[ graphviz
+=]
+
 ```
 
 效果 见 截图，实测效果可参见 test文件夹
@@ -87,7 +98,7 @@
 ![截图](/docs/images/screen1.png)
 
 
-## 探索中的规则
+## 探索中的规则 Rules in Development
 
 参见 [设计草案](/docs/2018-06-25-友码文设计大体定案.md)
 
@@ -97,32 +108,35 @@
 - 起首符号后，要不要加空格？
 - 中间间隔符用什么？目前用 `:`
 
-## 待办任务
+## 待办任务 TODO list
 
 - [ ] 实现 nodejs 编译器
 - [x] 为emacs编写一个 il-mode
 - [ ] 编写 snippet
-- [ ] 编写 kwrite 规则 [kde syntax highlighting framework](https://github.com/KDE/syntax-highlighting)
+- [x] 编写 kwrite 规则 [kde syntax highlighting framework](https://github.com/KDE/syntax-highlighting)，放于 `~/.local/share/org.kde.syntax-highlighting/syntax` 20180627初步搞定。
 - [x] 编写一个适配手机编辑器的高亮方案 jota，20180625 爬山登顶后，小坐一会，搞定。
+- [ ] vscode atom 的高亮方案
+- [ ] vim高亮方案
+- [ ] codemirror高亮方案
 - [ ] 制造一个编辑器，使其能把各种媒体内容放入，保存时归档，打开是解开归档。从而形成一个编辑器。
 
 
 
 
-## 如何参与
+## 如何参与 How to Contribute
 
-文件夹解析：
+文件夹解析 file structure：
 - lib 为源码
 - docs为文档
 - derivation 为适配插件，用于kwrite等外部工具
 - test 测试代码区
 - public 文档发布区
 
-## 历史
+## 历史 History
 
 + 20141105 开始规划
 + 20180617 端午前夕，初步完成emacs il-mode
 + 20180622 规则初步定案
-+ 20180625 调整规则：行内为单个标识符且带始终标识，首写。连接统一设置，可扩展区块换标识符。
-
++ 20180625 调整规则：行内为单个标识符且带始终标识，首写。连接统一设置，可扩展区块换标识符。完成手机编辑器jota的高亮适配。
++ 20180626 完成kate/kwrite高亮移植。
 
