@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Kate syntax highlight filter for Il documents.
+ Kate syntax highlight filter for Il documents.
 
-Copyright 2018 Atlas Jobinson. http://jobinson.ga/
-Dual-Licensed under both GPL and BSD licenses.
+ Copyright 2018 Atlas Jobinson. http://jobinson.ga/
+ Dual-Licensed under both GPL and BSD licenses.
 
-Created: 20180614
+ Created: 20180614
+
+ 
 -->
 
 <!DOCTYPE language SYSTEM "language.dtd"
@@ -54,15 +56,15 @@ Created: 20180614
      <context name="list" attribute="list" lineEndContext="#stay" lineEmptyContext="#pop">
         <IncludeRules context="inline-attribute"/>
       </context>
-      <context name="multiline-list" attribute="ml-list" lineEndContext="#stay" lineEmptyContext="#pop">
-	<RegExpr attribute="ml-list" String="(^[\+\-]+[\]]{1})\n?" endRegion="multiline-list"/>
+      <context name="multiline-list" attribute="multiline-list" lineEndContext="#stay" lineEmptyContext="#pop">
+	<RegExpr attribute="multiline-list" String="(^[\+\-]+[\]]{1})\n?" endRegion="multiline-list"/>
 	<IncludeRules context="inline-attribute"/>
       </context>
       <context name="blockquote" attribute="blockquote" lineEndContext="#stay" lineEmptyContext="#pop">
         <IncludeRules context="inline-attribute"/>
       </context>
-      <context name="multiline-blockquote" attribute="ml-blockquote" lineEndContext="#stay" lineEmptyContext="#pop">
-	<RegExpr attribute="ml-blockquote" String=".*(^[&gt;]+[\]]{1})\n?" endRegion="multiline-blockquote"/>
+      <context name="multiline-blockquote" attribute="multiline-blockquote" lineEndContext="#stay" lineEmptyContext="#pop">
+	<RegExpr attribute="multiline-blockquote" String=".*(^[&gt;]+[\]]{1})\n?" endRegion="multiline-blockquote"/>
 	<IncludeRules context="inline-attribute"/>
       </context>
 

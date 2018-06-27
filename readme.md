@@ -111,26 +111,51 @@
 ## 待办任务 TODO list
 
 - [ ] 实现 nodejs 编译器
-- [x] 为emacs编写一个 il-mode
-- [ ] 编写 snippet
-- [x] 编写 kwrite 规则 [kde syntax highlighting framework](https://github.com/KDE/syntax-highlighting)，放于 `~/.local/share/org.kde.syntax-highlighting/syntax` 20180627初步搞定。
+- [x] 为emacs编写一个 il-mode，非全版reg
+- [ ] 编写 snippet ln到snippet文件夹里
+- [x] 编写 kwrite 规则 [kde syntax highlighting framework](https://github.com/KDE/syntax-highlighting)，放于 `~/.local/share/org.kde.syntax-highlighting/syntax` 20180627初步搞定。非全版reg
 - [x] 编写一个适配手机编辑器的高亮方案 jota，20180625 爬山登顶后，小坐一会，搞定。
-- [ ] vscode atom 的高亮方案
-- [ ] vim高亮方案
-- [ ] codemirror高亮方案
+- [ ] vscode 高亮方案
+- [ ] atom 的高亮方案
+- [ ] vim 高亮方案
+- [ ] codemirror高亮方案：在src/mode/里
 - [ ] 制造一个编辑器，使其能把各种媒体内容放入，保存时归档，打开是解开归档。从而形成一个编辑器。
 
 
+## 如何使用 Quick Start
 
+### 仅需语法高亮
+
+根据所使用平台，调用derivation里的相应插件即可。
+
+比如emacs：
+
+``` shell
+ln -s /path/to/derivation/emacs-mode/il-mode.el ~/.emacs.d/plugins
+ln -s /path/to/derivation/snippet ~/.emacs.d/snippet/il-mode
+```
+然后在 init.el里添加下面两行，调用插件
+```
+;; 自动加载 il-mode
+(autoload 'il-mode "il-mode")
+(add-to-list 'auto-mode-alist '("\\.il\\'" . il-mode) t)
+```
+
+### 需要把文件输出为html：
+```
+npm instal -g il-mode
+il-mode -i inputfile -o outputfile
+```
 
 ## 如何参与 How to Contribute
 
-文件夹解析 file structure：
-- lib 为源码
-- docs为文档
-- derivation 为适配插件，用于kwrite等外部工具
-- test 测试代码区
-- public 文档发布区
+### 文件夹解析 file structure：
+
+- lib 为源码 contains all source code.
+- docs 为文档 contains all document including design draft.
+- derivation 为适配插件，用于kwrite等外部工具 contains all derivation for many platforms, such as emacs vim kate vscode github-atom
+- test 测试代码区 contains all test files
+- public 文档发布区 empty, for docs to deploy as static web pages.
 
 ## 历史 History
 
