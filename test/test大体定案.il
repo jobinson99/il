@@ -78,15 +78,15 @@
 #3 测试数据：行内
 
 
-word [* bold要选到bold] word
-inword[* bold词内要选到]word
-word [* many words bold要选到bold] 
-word [ * start blank nobold不选到nobold ]
-word [** nobold不选到nobold]
-word [* bold要选到第一个]]]]]
-word [* bold \] word]
+word [* 加粗bold] word
+inword[* 词内加粗bold in word]word
+word [* 多词同时加粗many words bold] 
+word [ * start blank nobold左中括号必需紧跟符号，否则不加粗nobold ]
+word [** nobold符号只能跟一个，跟2个不算nobold]
+word [* 加粗，选到第一个bold]]]]]
+word [* 加粗bold \] 加粗word]
 [* start line bold加粗] content
-word \[* word [* bold加粗] content
+word \[* 非加粗word [* bold加粗] content
 中文[* 加粗]中文加粗，中文 [*不加 粗]
 
 [*] no bold 
@@ -96,37 +96,37 @@ word \[* word [* bold加粗] content
 [*     word] bold
 
 word[* bold[word\]bold]word
-word[* bold[* bold in bold] bold] word
+word[* 加粗bold[* 加粗bold in bold] 加粗bold] word
 
- [/ italic italic要选到italic] 
-[/ italic选到italic]
+ [/ 斜体italic italic] 
+[/ 斜体italic]
 
- [+ strike through 要选到strike through] 
-begin [+ strikethrough要选到strikethrough] end
-[+ start line strikethrough选到strikethrough]  strike through
- [+        strikethrough不选到nostrikethrough]
- [+ strikethrough要选到strikethrough\]]]]]
+ [+ strike through 多个词删除线strike through] 
+begin [+ strikethrough删除线strikethrough] end
+[+ start line strikethrough删除线strikethrough]  strike through
+ [+        strikethrough删除线strikethrough]
+ [+ strikethrough删除线strikethrough\]]]]]
 
 
 3 + 5 = 8 4 - 2 = 2  no inline style
 1 + 2 + 3 = 6
 1+2+3=6
 
-word[^ superscript上标要选到superscript]word
-word\[^ nosuperscript不选到nosuperscript]word [^ superscript要选到superscript]word
-word[^ superscript要选到\]no end here 要选到superscript] word
-[^ nosuperscript不选到] start line no superscript
-Roll ov[^ e]r matches or the ex\[^ p不选到res[^ superscript要选到]superscript. blank superscript[^ ]  [^] no script. [^ superscript要选到h]t不选到sh[^ h要选到] eet, full Ref[^ er要选到e\]n要选到]ce, results [^ superscript选到] the Tools below. Replace & List ou[^ 67要选到tp]ut
+word[^ superscript上标superscript]word
+word\[^ nosuperscript非上标nosuperscript]word [^ superscript上标superscript]word
+word[^ superscript上标\]no end here 上标superscript] word
+[^ 非上标nosuperscript] start line no superscript
+Roll ov[^ e]r matches or the ex\[^ p非上标res[^ superscript上标]superscript. blank superscript[^ ]  [^] no script. [^ 上标superscripth]t不选到sh[^ 上标] eet, full Ref[^ er上标e\]n上标]ce, results [^ 上标superscript] the Tools below. Replace & List ou[^ 67上标tp]ut
 
 word [~ subscript下标] word word [~ 下标superscript] word word[~ supscript] 
 
-word [= code行内代码] word [= inline code行内代码code] word
-word [= code with \]code\] code]word
+word [= 行内代码code] word [= 行内代码 inline code] word
+word [= 行内代码 code with \]code\] 行内代码code]word
 
-word word [= \]nocode end行内代码code code] word.
-start and end with space [= code行内代码 ] word. 
+word word [= \]行内代码 nocode end code code] word.
+start and end with space [= 行内代码code ] word. 
 
-\[= no code [= code begin] code begin
+\[= 非代码no code [= 行内代码code begin] code begin
 
 
 
@@ -249,50 +249,50 @@ start and end with space [= code行内代码 ] word.
 ## 
 
 #1 
-#11 no title 不要选到
+#11 非标题 no title
 
-#2:: no title 不要选到
+#2:: 非标题 no title
 
-#22: no title 不要选到
+#22: 非标题 no title
 
-#1: no title 不要选到
+#1: 非标题 no title
 
-# 22 no title 不要选到
+# 22 no title 非标题
 
 
-#22 no title 不要选到
+#22 no title 非标题
 
 # 1
 
-## no title 不要选到
+## no title 非标题
 
-##3: no title 不要选到
+##3: 非标题 no title
 
-# no title 不要选到
-### no title 不要选到
+# 非标题 no title
+### 非标题 no title
 
 
-#+ no title 不要选到
+#+ 非标题 no title
 
-#2 title2 要选到
+#2 标题 title2 标题
 
-#3: no title不要选到
+#3: 非标题 no title
 
 #2 #3 #2
 
-#4 title4 要选到
+#4 标题 title4
 
-#111 rank out of range, no title 不要选到 
+#111 超过限值，非标题 out of range, no title
 
-#2  title2 要选到
+#2  标题 title2
 
-#2 title2要选到 #2
+#2 标题title2 #2
 
-#no title不要选到 
+#非标题no title
 
 ###
 
- #1 no title 不要选到
+ #1 非标题 no title
 
 [解决]断行会使其失效
 #1 title1 要选到 
@@ -300,42 +300,45 @@ start and end with space [= code行内代码 ] word.
 [解决]第一行无空格，连续断行会被选取问题。
 
 #1
-no title 不要 选到
+非标题 no title
 
 
 #3 测试用的样例：分隔线
 
-line started with blank, no hr
+行首为空格，非分隔线，line started with blank, not hr
 
  ===
 
-line ended with blank, hr
+符号后带空格，为分分隔线，line ended with blank, hr
 === 
 
 ===   
 
-===   no hr 需要失效
+===   符号后带文字，非分隔线，with words after =， not hr
 
 ===
 
   ===
 
-to many tokens, no hr
+超过3个，考虑可为分隔线 more than 3 =, hr
 
 =====
+
+不连续，不是分隔线 not continued =, not hr
+=== ===
 
 
 #3 测试用的样例：引用
 
-> blockquote
->  blockquote started with multi blank
->> sub blockquote
+> 引用 blockquote
+>  引用，允许大于号后多个空格 blockquote started with multi blank
+>> 二级引用，sub blockquote
 
->>> rank 3 blockquote
+>>> 三级引用，rank 3 blockquote
 
->[ multiline blockquote  start必需对应
-必需选到
-multiline blockquote end 必需对应
+>[ 多行引用，必需对应匹配后面结束符号 multiline blockquote start
+引用
+多行引用，必需对应的同等级结束符号，multiline blockquote end
 >]
 
 >>[ sub multiline blockquote start必需对应
@@ -472,6 +475,6 @@ comment
 ==]
 
 ==[ test
-sfdf
+code
 ==]]]]
 

@@ -50,6 +50,8 @@
 
 
 === 分隔线 hr
+或任意多 = or as many = as you wish
+========================
 
 - 列表list
 + 有序列表order list
@@ -111,9 +113,9 @@
 ## 待办任务 TODO list
 
 - [ ] 实现 nodejs 编译器
-- [x] 为emacs编写一个 il-mode，非全版reg
+- [x] 为emacs编写一个 il-mode。
 - [ ] 编写 snippet ln到snippet文件夹里
-- [x] 编写 kwrite 规则 [kde syntax highlighting framework](https://github.com/KDE/syntax-highlighting)，放于 `~/.local/share/org.kde.syntax-highlighting/syntax` 20180627初步搞定。非全版reg
+- [x] 编写 kwrite 规则 [kde syntax highlighting framework](https://github.com/KDE/syntax-highlighting)，放于 `~/.local/share/org.kde.syntax-highlighting/syntax` 20180627初步搞定。
 - [x] 编写一个适配手机编辑器的高亮方案 jota，20180625 爬山登顶后，小坐一会，搞定。
 - [ ] vscode 高亮方案
 - [ ] atom 的高亮方案
@@ -121,6 +123,7 @@
 - [ ] codemirror高亮方案：在src/mode/里
 - [ ] 制造一个编辑器，使其能把各种媒体内容放入，保存时归档，打开是解开归档。从而形成一个编辑器。
 
+emacs和kate的reg引擎都有瑕疵。
 
 ## 如何使用 Quick Start
 

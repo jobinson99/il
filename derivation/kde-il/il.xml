@@ -28,7 +28,7 @@
       <context name="Normal Text" attribute="Normal Text" lineEndContext="#stay">
 	<IncludeRules context="inline-attribute"/>
 	<RegExpr attribute="title" String="^#[1-6]{1}\+?\s.+$"/>
-	<RegExpr attribute="ruler" String="(^\={3})(\s*$)"/>
+	<RegExpr attribute="ruler" String="(^\={3,})(\s*$)"/>
         <RegExpr context="list" String="^[\-\+]+\s.+$"/>
 	<RegExpr context="blockquote" String="^&gt;+\s.+$"/>
         <IncludeRules context="textblock"/>
@@ -36,18 +36,18 @@
 
       <context name="inline-attribute" attribute="common" lineEndContext="#stay" >
 	<!-- minimal 指最少匹配，默认关，会贪婪匹配 -->
-	<RegExpr attribute="strong" minimal="true" String="(\[\*\s+).+\]"/>
-        <RegExpr attribute="emphasis" minimal="true" String="(\[\/{1}\s+).+\]"/>
-	<RegExpr attribute="underline" minimal="true" String="\[[_]\s+.+\]"/>
-	<RegExpr attribute="strikeout" minimal="true" String="\[[\+]{1}\s+.+\]"/>
-	<RegExpr attribute="superscript" minimal="true" String="\[[\^]\s+.+\]"/>
-	<RegExpr attribute="subscript" minimal="true" String="\[[\~]\s+.+\]"/>
-	<RegExpr attribute="code" minimal="true" String="\[[\=]\s+.+\]"/>
-	<RegExpr attribute="weblink" minimal="true" String="\[&gt;\w+\s*.+\]"/>
-	<RegExpr attribute="reflink" minimal="true" String="\[&lt;\w+\s+.+\]"/>
-        <RegExpr attribute="reflinktarget" minimal="true" String="\[#\w+\s+.+\]"/>
-        <RegExpr attribute="imagelink" minimal="true" String="\[\!\w+\s*.+\]"/>
-        <RegExpr attribute="custommark" minimal="true" String="\[\w+\s+.+\]"/>
+	<RegExpr attribute="strong" minimal="true" String="(\[\*\s+).+[^\\]\]"/>
+        <RegExpr attribute="emphasis" minimal="true" String="(\[\/{1}\s+).+[^\\]\]"/>
+	<RegExpr attribute="underline" minimal="true" String="\[[_]\s+.+[^\\]\]"/>
+	<RegExpr attribute="strikeout" minimal="true" String="\[[\+]{1}\s+.+[^\\]\]"/>
+	<RegExpr attribute="superscript" minimal="true" String="\[[\^]\s+.+[^\\]\]"/>
+	<RegExpr attribute="subscript" minimal="true" String="\[[\~]\s+.+[^\\]\]"/>
+	<RegExpr attribute="code" minimal="true" String="\[[\=]\s+.+[^\\]\]"/>
+	<RegExpr attribute="weblink" minimal="true" String="\[&gt;\w+\s*.+[^\\]\]"/>
+	<RegExpr attribute="reflink" minimal="true" String="\[&lt;\w+\s+.+[^\\]\]"/>
+        <RegExpr attribute="reflinktarget" minimal="true" String="\[#\w+\s+.+[^\\]\]"/>
+        <RegExpr attribute="imagelink" minimal="true" String="\[\!\w+\s*.+[^\\]\]"/>
+        <RegExpr attribute="custommark" minimal="true" String="\[\w+\s+.+[^\\]\]"/>
 	<!-- two spaces at end of line generates linebreak -->
         <RegExpr attribute="linebreak" minimal="true" String=" $"/>
 
@@ -113,9 +113,9 @@
       <itemData name="ruler" defStyleNum="dsNormal" bold="true"/>
       <itemData name="custommark" defStyleNum="dsNormal" italic="true" bold="true"/>
       <itemData name="linebreak" defStyleNum="dsNormal" underline="true" color="#999999"/>
-      <itemData name="weblink" defStyleNum="dsOthers" underline="true"/>
-      <itemData name="reflink" defStyleNum="dsOthers" underline="true"/>
-      <itemData name="reflinktarget" defStyleNum="dsWarning" italic="true" underline="true"/>
+      <itemData name="weblink" defStyleNum="dsOthers" italic="true"/>
+      <itemData name="reflink" defStyleNum="dsOthers" italic="true"/>
+      <itemData name="reflinktarget" defStyleNum="dsWarning" italic="true"/>
       <itemData name="imagelink" defStyleNum="dsAlert" italic="false" bold="false"/>
       <itemData name="title" defStyleNum="dsFunction" bold="true"/>
       <itemData name="list" defStyleNum="dsFloat"/>
