@@ -389,15 +389,15 @@ mulitiline list endf 必需对应，但不选中后面的
 
 defun test
 
-line *bold* 不可作用
+line [* 加粗]不起作用 no [* bold]
 
-#1 title 不可作用
+#1 标题不起作用 no title
 
-> blockquote 不可作用
+> 引用不起作用 no blockquote
 line
 
-- list不可作用
-+ order-list不可作用
+- 无序列表不起作用 no list
++ 有序列表不可作用 no rodered-list
 
 new line
 ==]
@@ -413,12 +413,13 @@ line4 要选到
 ==]
 
 ==[
-1line 要选到
+1代码区1 line
 line2
 ==]
 
   ==[
-  不要选到
+  缩进的判断为非代码
+  no code block with tab/space start
   ==]
 
 ==[
@@ -433,48 +434,58 @@ no code block 不要选到
 ====]
 
 ==[ shell
-code block 要选到
+code block
+代码区
 ==]
 
 ==[ 
-  ==[ no code block start不要选到
-  code block区段要选到
+  ==[ no code block start缩进的判断为非代码
+  code block代码区
   ==]
   
 ==]
 
 
 ==[ emacs-lisp highlight run init
-defun functionname 要选到
+defun functionname
+代码区
 ==]
-
 
 ==[
 code block
    code block
-code block 要选到
 code block
+代码区
 ==]
 
 
 ==[
 code
+末行符号后不能跟文字，跟文字部分为代码区
 ==] no code end
 ==]
 
 ==[    
 code
+首行后跟若干空格，代码区
 ==]
 
 ==[
 code
+首行无任何其他元素，代码区
 ==]
 
 ====[ comment
 comment
+注释
 ==]
 
 ==[ test
 code
-==]]]]
+代码区
+==] 
 
+==[ test
+code
+非代码区
+==]]]]

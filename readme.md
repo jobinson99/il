@@ -1,4 +1,4 @@
-# 友码 Il is markup language
+# 友码 Il is markup language  一种标记式文本语言，特点是 规则统一精炼，容易扩展，容易掌握，视觉舒服。
 
 ![标志](/docs/images/il-logo.png)
 
@@ -115,7 +115,7 @@
 - [ ] 实现 nodejs 编译器
 - [x] 为emacs编写一个 il-mode。
 - [ ] 编写 snippet ln到snippet文件夹里
-- [x] 编写 kwrite 规则 [kde syntax highlighting framework](https://github.com/KDE/syntax-highlighting)，放于 `~/.local/share/org.kde.syntax-highlighting/syntax` 20180627初步搞定。
+- [x] 编写 kwrite 规则 [kde syntax highlighting framework](https://github.com/KDE/syntax-highlighting)，20180627初步搞定。
 - [x] 编写一个适配手机编辑器的高亮方案 jota，20180625 爬山登顶后，小坐一会，搞定。
 - [ ] vscode 高亮方案
 - [ ] atom 的高亮方案
@@ -129,9 +129,12 @@ emacs和kate的reg引擎都有瑕疵。
 
 ### 仅需语法高亮
 
+> 注意：由于目前尚未把语法高亮提交相应平台，所以只能手动添加。
+
 根据所使用平台，调用derivation里的相应插件即可。
 
-比如emacs：
+#### emacs里的il语法高亮
+符号连接或者直接复制到相应目录。
 
 ``` shell
 ln -s /path/to/derivation/emacs-mode/il-mode.el ~/.emacs.d/plugins
@@ -143,6 +146,18 @@ ln -s /path/to/derivation/snippet ~/.emacs.d/snippet/il-mode
 (autoload 'il-mode "il-mode")
 (add-to-list 'auto-mode-alist '("\\.il\\'" . il-mode) t)
 ```
+
+#### kate/kwrite语法高亮
+
+符号连接或者直接复制到相应目录。
+``` shell
+ln -s /path/to/derivation/kde-il/il.xml ~/.local/share/org.kde.syntax-highlighting/syntax/il.xml
+
+```
+#### jota语法高亮
+
+把 /derivation/jota/il.conf 放入手机sdcard的 `.jota/keyword/user/` 里即可。
+
 
 ### 需要把文件输出为html：
 ```

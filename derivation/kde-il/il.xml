@@ -13,7 +13,7 @@
 <!DOCTYPE language SYSTEM "language.dtd"
 [
 <!ENTITY prestartregex "(^\=+\[)">
-<!ENTITY preendregex "([\s\S]*?).*(^\=+\])\n?$">
+<!ENTITY preendregex "([\s\S]*?).*(^\=+\]\s*\n?$)">
 ]>
 <language name="Il"
 	  version="1"
