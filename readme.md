@@ -7,7 +7,7 @@
 
 状态：语法风格已经大致确定，只剩几个小细节可能略有调整。
 
-## 特点
+## #2 特点
 
 + 区块全部无行首缩进
 + 可扩展：
@@ -20,7 +20,7 @@
 - 视觉上要舒服
 
 
-## 已经稳定的规则 stable rules
+## #2 已经稳定的规则 stable rules
 
 行内标识 inline markup
 ```
@@ -100,7 +100,7 @@
 ![截图](/docs/images/screen1.png)
 
 
-## 探索中的规则 Rules in Development
+## #2 探索中的规则 Rules in Development
 
 参见 [设计草案](/docs/2018-06-25-友码文设计大体定案.md)
 
@@ -110,7 +110,7 @@
 - 起首符号后，要不要加空格？
 - 中间间隔符用什么？目前用 `:`
 
-## 待办任务 TODO list
+## #2 待办任务 TODO list
 
 - [ ] 实现 nodejs 编译器
 - [x] 为emacs编写一个 il-mode。
@@ -125,15 +125,15 @@
 
 emacs和kate的reg引擎都有瑕疵。
 
-## 如何使用 Quick Start
+## #2 如何使用 Quick Start
 
-### 仅需语法高亮
+### #3 仅需语法高亮
 
 > 注意：由于目前尚未把语法高亮提交相应平台，所以只能手动添加。
 
 根据所使用平台，调用derivation里的相应插件即可。
 
-#### emacs里的il语法高亮
+#### #4 emacs里的il语法高亮
 符号连接或者直接复制到相应目录。
 
 ``` shell
@@ -147,27 +147,30 @@ ln -s /path/to/derivation/snippet ~/.emacs.d/snippet/il-mode
 (add-to-list 'auto-mode-alist '("\\.il\\'" . il-mode) t)
 ```
 
-#### kate/kwrite语法高亮
+#### #4 kate/kwrite语法高亮
 
 符号连接或者直接复制到相应目录。
 ``` shell
 ln -s /path/to/derivation/kde-il/il.xml ~/.local/share/org.kde.syntax-highlighting/syntax/il.xml
 
 ```
-#### jota语法高亮
+#### #4 jota语法高亮
 
 把 /derivation/jota/il.conf 放入手机sdcard的 `.jota/keyword/user/` 里即可。
 
 
-### 需要把文件输出为html：
+### #3 需要把文件输出为html：
+
+尚不可用。
+
 ```
 npm instal -g il-mode
 il-mode -i inputfile -o outputfile
 ```
 
-## 如何参与 How to Contribute
+## #2 如何参与 How to Contribute
 
-### 文件夹解析 file structure：
+### #3 文件夹解析 file structure：
 
 - lib 为源码 contains all source code.
 - docs 为文档 contains all document including design draft.
@@ -175,7 +178,7 @@ il-mode -i inputfile -o outputfile
 - test 测试代码区 contains all test files
 - public 文档发布区 empty, for docs to deploy as static web pages.
 
-## 历史 History
+## #2 历史 History
 
 + 20141105 开始规划
 + 20180617 端午前夕，初步完成emacs il-mode
