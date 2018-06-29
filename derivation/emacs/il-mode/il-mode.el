@@ -155,13 +155,13 @@ arguments."
    "\\(^["
    markup
    "]+\\)\\["
-   "\\(\\s \\)"
+   "\\([[:space:]]*"
    lang
    keyword
-   "\\(.\\|\n\\)*?"
+   "\\)\\(.\\|\n\\)*?"
    "\\(^["
    markup
-   "]+\\]\\)\\(?:\n$\\)"
+   "]+\\]\\)\\(?:[[:space:]]*\n$\\)"
    ))
 
 (defun il-block-hr-matcher (markup)
@@ -169,7 +169,7 @@ arguments."
   (concat
    "\\(^"
    markup
-   "\\{3\\}[[:space:]]*\\(?:$\\)\\)"
+   "\\{3,\\}[[:space:]]*\\(?:$\\)\\)"
    ))
 
 
@@ -180,7 +180,7 @@ arguments."
    "\\(\\(\\[["
    markup
    "]\\{1\\}[[:space:]]+\\)\\(?:\\w\\|\\w.*?\\w\\|[[{(].*?\\w\\)"
-   "\\(\\]\\)\\)"
+   "\\([^\\\\]\\]\\)\\)"
    ))
 
 (defun il-inline-oneword-matcher (markup)

@@ -13,7 +13,8 @@
 
 ==[
 加粗
-[* bold]
+[* bold]	js版：(?<!\\)(\[\*\s+)([\s\S]*?\S)(?<!\\)(\])
+
 		emacs版：\\(\\[[*][[:space:]]+\\)\\(?:\\w\\|\\w.*?\\w\\|[[{(].*?\\w\\)\\(\\]\\)
 		\\(\(\\[[*][[:space:]]+\\)\\(\\w\\|\\w.*?\\w\\|[[{(].*?\\w\\)\\(\\]\\)
 \\(\\[[*][[:space:]]+\\)\\(?:.*?\\w\\)\\(\\]\\)\\)
@@ -89,11 +90,12 @@ word [* 加粗bold \] 加粗word]
 word \[* 非加粗word [* bold加粗] content
 中文[* 加粗]中文加粗，中文 [*不加 粗]
 
-[*] no bold 
-[**] no bold
-[* *] bold
-[ *] no bold
-[*     word] bold
+[*] 非加粗 no bold 
+[**] 非加粗 no bold
+[* *] 加粗 bold
+[ *] 非加粗 no bold
+[* ] 非加粗 no bold
+[*     加粗bold] word
 
 word[* bold[word\]bold]word
 word[* 加粗bold[* 加粗bold in bold] 加粗bold] word
@@ -112,11 +114,11 @@ begin [+ strikethrough删除线strikethrough] end
 1 + 2 + 3 = 6
 1+2+3=6
 
-word[^ superscript上标superscript]word
-word\[^ nosuperscript非上标nosuperscript]word [^ superscript上标superscript]word
+word[^ superscript词中上标]word
+word\[^ nosuperscript此非上标]word [^ superscript上标]word
 word[^ superscript上标\]no end here 上标superscript] word
-[^ 非上标nosuperscript] start line no superscript
-Roll ov[^ e]r matches or the ex\[^ p非上标res[^ superscript上标]superscript. blank superscript[^ ]  [^] no script. [^ 上标superscripth]t不选到sh[^ 上标] eet, full Ref[^ er上标e\]n上标]ce, results [^ 上标superscript] the Tools below. Replace & List ou[^ 67上标tp]ut
+[^ 非上标nosuperscript] 行首非上标start line no superscript
+Roll ov[^ e]r matches or the ex\[^ nosuperscript 非上标[^ superscript上标]word. blank superscript[^ ]  [^] no script. [^ 上标superscripth]不选到no superscript[^ 上标] eet, full Ref[^ er上标e\]n上标]ce, results [^ 上标superscript] the Tools below. Replace & List ou[^ 12上标]word
 
 word [~ subscript下标] word word [~ 下标superscript] word word[~ supscript] 
 
@@ -239,12 +241,12 @@ start and end with space [= 行内代码code ] word.
 
 
 
-##1+ no title 不可选到
+##1+ 非标题 no title
 
 
-#1+ title1 需要选到
+#1+ 标题1+ title1+
 
-##   no title
+##   非标题no title
 
 ## 
 
@@ -257,14 +259,14 @@ start and end with space [= 行内代码code ] word.
 
 #1: 非标题 no title
 
-# 22 no title 非标题
+# 22 非标题no title
 
 
-#22 no title 非标题
+#22 非标题no title
 
 # 1
 
-## no title 非标题
+## 非标题no title
 
 ##3: 非标题 no title
 
@@ -286,7 +288,7 @@ start and end with space [= 行内代码code ] word.
 
 #2  标题 title2
 
-#2 标题title2 #2
+#2 标题2 title2 #2
 
 #非标题no title
 
@@ -295,7 +297,7 @@ start and end with space [= 行内代码code ] word.
  #1 非标题 no title
 
 [解决]断行会使其失效
-#1 title1 要选到 
+#1 标题1 title1 
 
 [解决]第一行无空格，连续断行会被选取问题。
 
@@ -346,40 +348,41 @@ start and end with space [= 行内代码code ] word.
 sub multiline blockquote end 必需对应
 >>]
 
- > line started with blank, no blockquote 不可选到
+ > 行首缩进，非引用line started with blank, no blockquote
 
->no blank ahead, no blockquote不可选到
->[no blank ahead, no blockquote不可选到
+>行首无空格，非引用no blank ahead, no blockquote
+>[行首无空格，非引用no blank ahead, no blockquote
 
 #3 测试用的样例：列表
 
-- not ordered list
--- sub list
--+ list, sub ordered list 
+- 无序列表not ordered list
+-- 二级列表sub list
+-+ 无序列表，二级有序列表 list, sub ordered list 
 
--[ multiline list必需对应
-必需选到
-multiline list必需对应，但不选中后面的
+-[ 必需对应同级 \-] need to meet the same rank \-]
+多行列表
+multiline list
 -]
 
---[ multiline list必需对应
-必需选到
-mulitiline list endf 必需对应，但不选中后面的
+--[ 必需对应同级 \-] need to meet the same rank \-]
+多行列表必需选到
+mulitiline list
 --] 
 
---[ no blockquote无法对应
-无对应
--+] no blockquote 无法对应
+--[ 无法对应 not found end symbol, not multiline list
+非多行列表
+no multiline list
+-+] 
 
-+ ordered list可选到
++ 有序列表 ordered list
 
-++- ordered list non-ordered list 
+++- 有序列表，二级有序列表，三级无序列表 ordered list non-ordered list 
 不可选到
 
---no list不可选到
-+no ordered list不可选到
- - no list不可选到
- + no ordered list不可选到
+--无空格，非列表no list
++无空格，非列表no ordered list
+ - 缩进，非列表no list
+ + 缩进，非列表no ordered list
 
 
 
