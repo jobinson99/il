@@ -44,8 +44,8 @@
 	<RegExpr attribute="subscript" minimal="true" String="\[[\~]\s+.+[^\\]\]"/>
 	<RegExpr attribute="code" minimal="true" String="\[[\=]\s+.+[^\\]\]"/>
 	<RegExpr attribute="weblink" minimal="true" String="\[&gt;\w+\s*.+[^\\]\]"/>
-	<RegExpr attribute="reflink" minimal="true" String="\[&lt;\w+\s+.+[^\\]\]"/>
-        <RegExpr attribute="reflinktarget" minimal="true" String="\[#\w+\s+.+[^\\]\]"/>
+	<RegExpr attribute="reflink" minimal="true" String="(\[&lt;)\w+\s+.+[^\\]\]"/>
+        <RegExpr attribute="reflinktarget" minimal="true" String="(\[#)\w+\s+.+[^\\]\]"/>
         <RegExpr attribute="imagelink" minimal="true" String="\[\!\w+\s*.+[^\\]\]"/>
         <RegExpr attribute="custommark" minimal="true" String="\[\w+\s+.+[^\\]\]"/>
 	<!-- two spaces at end of line generates linebreak -->
