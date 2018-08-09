@@ -20,7 +20,7 @@
 - 视觉上要舒服
 
 
-## #2 已经稳定的规则 stable rules
+## #2 Stable rules
 
 行内标识 inline markup
 ```
@@ -100,7 +100,7 @@
 ![截图](/docs/images/screen1.png)
 
 
-## #2 探索中的规则 Rules in Development
+## #2 Rules in Development
 
 参见 [设计草案](/docs/2018-06-25-友码文设计大体定案.md)
 
@@ -110,7 +110,7 @@
 - 起首符号后，要不要加空格？
 - 中间间隔符用什么？目前用 `:`
 
-## #2 待办任务 TODO list
+## #2 TODO list
 
 - [ ] 实现 nodejs 编译器
 - [x] 为emacs编写一个 il-mode。
@@ -127,9 +127,9 @@
 > 注意：emacs和kate的reg引擎都有瑕疵，大体不差，但还需要进一步适配，以精确表达规则。
 
 
-## #2 如何使用 Quick Start
+## #2 Quick Start
 
-### #3 仅需语法高亮
+### #3 Syntax Highlight only
 
 > 注意：由于目前尚未把语法高亮提交相应平台，所以只能手动添加。
 
@@ -170,19 +170,19 @@ npm instal -g il-mode
 il-mode -i inputfile -o outputfile
 ```
 
-## #2 如何参与 How to Contribute
+## #2 How to Contribute
 
-### #3 文件夹解析 file structure：
+### #3 File Structure：
 
-- lib 为源码 contains all source code.
-- docs 为文档 contains all document including design draft.
-- derivation 为适配插件，用于kwrite等外部工具 contains all derivation for many platforms, such as emacs vim kate vscode github-atom
-- test 测试代码区 contains all test files
-- public 文档发布区 empty, for docs to deploy as static web pages.
+- lib: contains all source code.
+- docs: contains all document including design draft.
+- derivation: contains all derivation for many platforms, such as emacs vim kate vscode github-atom
+- test: contains all test files
+- public: empty, for docs to deploy as static web pages.
 
-## #2 历史 History
+## #2 History
 
-+ 20141105 开始规划
++ 20141105 Design begins
 + 20180617 端午前夕，初步完成emacs il-mode
 + 20180622 规则初步定案
 + 20180625 调整规则：行内为单个标识符且带始终标识，首写。连接统一设置，可扩展区块换标识符。完成手机编辑器jota的高亮适配。
